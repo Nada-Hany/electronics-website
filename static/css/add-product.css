@@ -89,7 +89,18 @@ button{
     border-radius: 5px;
     background: var(--primary-color);
 }
+
 button:hover{
     background:var(--btn);
 }
+
+
+.light-text {
+    font-weight: 300; /* Adjust to a lower value for lighter weight (100 to 300 is typically light) */
+    opacity: 0.7; /* Makes the text slightly lighter by reducing its opacity */
+    font-family: Arial, sans-serif; /* Optional: Ensure you use your desired font */
+    font-size: 14px; /* Adjust the font size as needed */
+    color: #333; /* Adjust the color as needed */
+}
+
 </span>

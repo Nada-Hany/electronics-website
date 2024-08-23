@@ -1,3 +1,5 @@
+
+
 <span style="font-family: verdana, geneva, sans-serif"
   ><!DOCTYPE html>
   <html lang="en">
@@ -9,23 +11,41 @@
     <body>
       <div class="container">
         <div class="login">
-          <form>
-            <h1>add a product</h1>
-            <hr />
-            <label>Username</label>
-            <input type="text" placeholder="enter your username" />
-            <label>Password</label>
-            <input type="password" placeholder="enter your password" />
-            <label>Email</label>
-            <input type="password" placeholder="enter your email" />
-            <label>Contact</label>
-            <input type="password" placeholder="enter your phone number" />
+          <form id="upload-form" method="POST" enctype="multipart/form-data">
+            <h1>Add New Product</h1>
+                <hr />
+                <label>Product Name</label>
+                <input type="text" name="product_name" placeholder="Enter product name" />
+                
+                <label>Description</label>
+                <input type="text" name="description" placeholder="Enter description" />
+                
+                <label>Price</label>
+                <input type="text" name="price" placeholder="Enter price" />
+                
+                <label>Category</label>
+                <input type="text" name="Category" placeholder="Enter category" />
 
-            <button>add</button>
+                <label>Product Image</label>
+                <div class="light-text"> JPG or PNG no larger than 5 MB</div>
+             
+                <input id="img-account-profile-file" type="file" name="profile_picture" class="form-control mb-2">
+                
+                
+                <button type="submit" >Add</button>
+
           </form>
         </div>
-        <div class="pic"></div>
+
+        <div class="pic">
+          <div class="log">
+            <!-- add photo or any thing  -->
+          </div>
+        </div>
+        
+
       </div>
     </body>
   </html>
 </span>
+
