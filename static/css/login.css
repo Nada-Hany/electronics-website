@@ -1,22 +1,25 @@
-<span style="font-family: verdana, geneva, sans-serif;">*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
 :root {
     --primary-color: #490606;
     --secondary-color: #D10024;
     --font: #555555;
-  }
-body{
+}
+
+body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background:var(--primary-color);
+    background: var(--primary-color);
 }
-.container{
+
+.container {
     width: 100%;
     display: flex;
     max-width: 850px;
@@ -24,14 +27,17 @@ body{
     border-radius: 15px;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-.login{
+
+.login {
     width: 400px;
 }
-form{
+
+form {
     width: 250px;
     margin: 60px auto;
 }
-h1{
+
+h1 {
     color: var(--font);
     margin: 20px;
     text-align: center;
@@ -39,29 +45,31 @@ h1{
     text-transform: uppercase;
 }
 
-p{
+p {
     text-align: center;
     margin: 10px;
 }
-hr{
+
+hr {
     border-top: 2px solid var(--font);
 }
 
-.pic img{
+.pic img {
     width: 450px;
     height: 100%;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
 }
 
-form label{
+form label {
     color: var(--font);
     display: block;
     font-size: 16px;
     font-weight: 600;
     padding: 5px;
 }
-input{
+
+input {
     width: 100%;
     margin: 2px;
     border: none;
@@ -70,7 +78,8 @@ input{
     border-radius: 5px;
     border: 1px solid gray;
 }
-button{
+
+button {
     border: none;
     outline: none;
     padding: 8px;
@@ -82,14 +91,16 @@ button{
     border-radius: 5px;
     background: var(--primary-color);
 }
-button:hover{
-    background:var(--secondary-color);
+
+button:hover {
+    background: var(--secondary-color);
 }
-p{
+
+p {
     margin: 20px;
 }
-a{
+
+a {
     color: var(--font);
     text-decoration: none;
 }
-</span>
