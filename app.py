@@ -15,23 +15,30 @@ db.init_db(connection)
 @app.route('/product', methods=[ 'Get','POST'])
 def product():
     if request.method == 'POST':
-
-        photo = request.files.get('profile_picture')
-        if photo:
-            if not validators.allowed_file_size(photo):
-                return f"Unallowed photo size."
-            elif not validators.allowed_file(photo.filename):
-                return f"Unallowed photo extention."
-        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
-        product_data = {
-                "name": request.form.get('product_name'),
-                "description": request.form.get('description'),
-                "price": request.form.get('price'),
-                "img": photo.filename,
-                "Category": request.form.get('Category')
-        }
-        db.add_product(connection,product_data)
-        return f'product added'
+        photoPath = ""
+        form_type = request.form.get('form_name')
+        if form_type == 'upload_photo':
+            photo = request.files.get('profile_picture')
+            if photo:
+                if not validators.allowed_file_size(photo):
+                    return f"Unallowed photo size."
+                elif not validators.allowed_file(photo.filename):
+                    return f"Unallowed photo extention."
+            photoPath=os.path.join(app.config['UPLOAD_FOLDER'], photo.filename)
+            photo.save(photoPath)
+        elif form_type == 'upload_product':
+            product_data = {
+                    "name": request.form.get('product_name'),
+                    "description": request.form.get('description'),
+                    "price": request.form.get('price'),
+                    "img": "photoPath",
+                    "Category": request.form.get('Category')
+            }
+            for data in product_data.values():
+                if data == None or data =='':
+                    return 'enter full data'
+            db.add_product(connection,product_data)
+            return f'product added'
     
     return render_template('add-product.html')
     

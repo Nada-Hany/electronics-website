@@ -30,8 +30,13 @@ body{
     background-color:  #f8f8f8;
 }
 form{
+    align-items: center;
     width: 250px;
-    margin: 60px auto;
+    margin: 10px auto;
+}
+
+#photo-form{
+    margin-bottom: 0;
 }
 h1{
     color: var(--font);
@@ -47,6 +52,7 @@ p{
 }
 hr{
     border-top: 2px solid var(--secondary-color);
+    width: 252px;
 }
 .pic{
     margin: 140px 40px 0px 0px;
@@ -78,6 +84,7 @@ input{
     border: 1px solid gray;
 }
 button{
+    margin: 0 auto;
     border: none;
     outline: none;
     padding: 8px;
@@ -85,7 +92,7 @@ button{
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 15px 0px 20px 0px;
     border-radius: 5px;
     background: var(--primary-color);
 }

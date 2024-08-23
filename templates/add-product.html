@@ -1,39 +1,51 @@
-
-
 <span style="font-family: verdana, geneva, sans-serif"
   ><!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <title>Login Form | By Code Info</title>
+      <title>adding a product</title>
       <link rel="stylesheet" href="../static/css/add-product.css" />
     </head>
     <body>
       <div class="container">
         <div class="login">
+          <h1>Add New Product</h1>
+          <hr />
+          <form id="photo-form" method="POST" enctype="multipart/form-data">
+            <label>Product Image</label>
+            <div class="light-text">JPG or PNG no larger than 5 MB</div>
+            <input type="hidden" name="form_name" value="upload_photo" />
+            <input
+              id="img-account-profile-file"
+              type="file"
+              name="profile_picture"
+              class="form-control mb-2"
+            />
+            <button type="submit">upload photo</button>
+          </form>
           <form id="upload-form" method="POST" enctype="multipart/form-data">
-            <h1>Add New Product</h1>
-                <hr />
-                <label>Product Name</label>
-                <input type="text" name="product_name" placeholder="Enter product name" />
-                
-                <label>Description</label>
-                <input type="text" name="description" placeholder="Enter description" />
-                
-                <label>Price</label>
-                <input type="text" name="price" placeholder="Enter price" />
-                
-                <label>Category</label>
-                <input type="text" name="Category" placeholder="Enter category" />
+            <input type="hidden" name="form_name" value="upload_product" />
+            <label>Product Name</label>
+            <input
+              type="text"
+              name="product_name"
+              placeholder="Enter product name"
+            />
 
-                <label>Product Image</label>
-                <div class="light-text"> JPG or PNG no larger than 5 MB</div>
-             
-                <input id="img-account-profile-file" type="file" name="profile_picture" class="form-control mb-2">
-                
-                
-                <button type="submit" >Add</button>
+            <label>Description</label>
+            <input
+              type="text"
+              name="description"
+              placeholder="Enter description"
+            />
 
+            <label>Price</label>
+            <input type="text" name="price" placeholder="Enter price" />
+
+            <label>Category</label>
+            <input type="text" name="Category" placeholder="Enter category" />
+
+            <button type="submit">Add</button>
           </form>
         </div>
 
@@ -42,10 +54,7 @@
             <!-- add photo or any thing  -->
           </div>
         </div>
-        
-
       </div>
     </body>
   </html>
 </span>
-

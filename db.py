@@ -71,11 +71,17 @@ def update_user(connection , user_data):
     cursor.execute(query,(user_data['email'] , user_data['contact'] , user_data['username']))
     connection.commit() 
 
-def update_photo(connection, filename , username):
+def update_user_photo(connection, filename , username):
     cursor = connection.cursor()  
     query = '''UPDATE users SET img = ? WHERE username = ?'''
     cursor.execute(query, (filename,username))  
     connection.commit()  
+
+def update_product_photo(connection, filename , name):
+    cursor = connection.cursor()  
+    query = '''UPDATE products SET img = ? WHERE name = ?'''
+    cursor.execute(query, (filename,name))  
+    connection.commit() 
 
 def get_user(connection, username):
     cursor = connection.cursor()
