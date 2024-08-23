@@ -10,9 +10,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 connection = db.connect_to_database()
 db.init_db(connection)
 
-@app.route('/')
-def home():
-    return 'hallo '
+
 
 @app.route('/product', methods=[ 'Get','POST'])
 def product():
