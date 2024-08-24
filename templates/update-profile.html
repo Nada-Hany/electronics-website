@@ -1,36 +1,53 @@
-<span style="font-family: verdana, geneva, sans-serif"
-  ><!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Login Form | By Code Info</title>
-      <link rel="stylesheet" href="../static/css/updateProfile.css" />
-    </head>
-    <body>
-      <div class="container">
-        <div class="login">
-          <form>
-            <h1>Update your profile</h1>
-            <hr />
-            <label>Username</label>
-            <input type="text" placeholder="enter your username" />
-            <label>Password</label>
-            <input type="password" placeholder="enter your password" />
-            <label>Email</label>
-            <input type="password" placeholder="enter your email" />
-            <label>Contact</label>
-            <input type="password" placeholder="enter your phone number" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Update Profile | By Code Info</title>
+    <link rel="stylesheet" href="../static/css/updateProfile.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="signUp">
+            <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data">
+                <h1>Update your profile</h1>
 
-            <button>update data</button>
-          </form>
+                <hr>
+                <br>
+                <br>
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter your username" value="{{ data[1]}}" disabled />
+                <label>Password</label>
+                <input type="password"  name="password" placeholder="Enter your password" value="{{data[2]}}" />
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter your email" value="{{ data[3] }}" />
+                <label>Contact</label>
+                <input type="text" name="contact" placeholder="Enter your phone number" value="{{ data[4] }}" />
+                <br>
+                <br>
+                <hr />
+                <input type="hidden" name="form_name" value="update_user_data">
+                <div class="submit">
+                    <button type="submit">Update Data</button>
+                </div>
+            </form>
         </div>
+
         <div class="pic">
-          <img
-            src="../assets/ALEX VEDE on Instagram_ “I'm back from vacancy and….jpeg"
-          />
-          <button class="photo-button">upload photo</button>
+            {% if data[5] %}
+                <img src="{{ url_for('static', filename='uploads/' ~ data[5]) }}" alt="Profile Picture" />
+            {% else %}
+                <p>No profile picture uploaded.</p>
+            {% endif %}
+
+            <!-- Form to upload a new photo -->
+            <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="form_name" value="upload_photo">
+                <input type="file" id="profile_picture" name="profile_picture" />
+                <div class="submit">
+                    <button type="submit" class="photo-button">Upload Photo</button>
+                </div>
+            </form>
         </div>
-      </div>
-    </body>
-  </html>
-</span>
+    </div>
+</body>
+</html>
