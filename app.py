@@ -119,6 +119,70 @@ def product():
     return render_template('add-product.html')
     
 
+@app.route('/update-profile', methods=['GET', 'POST'])
+def update_profile():
+    if 'username' not in session:
+        return redirect(url_for('login'))  
+    
+    username = request.args.get('username', session['username'])
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    if request.method == 'GET':
+        if username != session['username']:
+            return "unauthorized"
+        data = db.get_user(connection, username)
+        return render_template('update-profile.html', data=data)
+
+    elif request.method == 'POST':
+        form_type = request.form.get('form_name')
+
+        if username != session['username']:
+            return 'unauthorized'
+    
+        if form_type == 'update_user_data':
+            user_data = {
+                "username": username,
+                "password": request.form.get('password'),
+                "email": request.form.get('email'),
+                "contact": request.form.get('contact'),
+                "img": request.form.get('img')
+            }
+            db.update_user(connection, user_data)
+            flash('Profile updated successfully.')
+
+        elif form_type == 'upload_photo':
+            photo = request.files.get('profile_picture')
+            if photo:
+                if not validators.allowed_file_size(photo):
+                    return "Unallowed size."
+                elif not validators.allowed_file(photo.filename):
+                    return "Unallowed extension."
+                else:
+                    filename = secure_filename(photo.filename)
+                    db.update_photo(connection, filename, username)
+                    photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    flash('Photo uploaded successfully.')
+
+        data = db.get_user(connection, username)
+        if not data:
+            return "User not found", 404
+        
+        return render_template('update-profile.html', data=data)
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'username' in session:
+        photo = request.files.get('profile_picture')
+        if photo:
+            if not validators.allowed_file_size(photo):
+                return "Unallowed size."
+            elif not validators.allowed_file(photo.filename):
+                return "Unallowed extension."
+            else:
+                username = session['username']
+                db.update_photo(connection, photo.filename, username)
+                photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
+                return redirect(url_for('update_profile'))
+    else:
+        return redirect(url_for('login'))
+

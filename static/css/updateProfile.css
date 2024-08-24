@@ -15,28 +15,40 @@ body{
     align-items: center;
     /* min-height: 100vh; */
     background:var(--primary-color);
+    padding: 10px;
 }
 .container{
-    width: 100%;
+    max-width: 100%;
+    
     display: flex;
-    max-width: 850px;
+    justify-content: space-around;
+    align-items: center;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    padding: 5px;
 }
-.login{
-    width: 450px;
+.signUp{
+    width: 50%;
 }
 form{
-    width: 250px;
-    margin: 60px auto;
+    width: 100%;
+    margin: 40px auto;
+    gap: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    
 }
 h1{
     color: var(--font);
     margin: 20px;
-    text-align: center;
     font-weight: bolder;
     text-transform: uppercase;
+    color: #490606;
+    width: 100%;
 }
 
 p{
@@ -55,7 +67,7 @@ hr{
 .pic img{
     width: 250px;
     height:  250px;
-    border-radius: 20%;
+    border-radius: 15px;
 }
 
 form label{
@@ -66,7 +78,7 @@ form label{
     padding: 5px;
 }
 input{
-    width: 100%;
+    width: 90%;
     margin: 2px;
     border: none;
     outline: none;
@@ -85,10 +97,35 @@ button{
     margin-top: 20px;
     border-radius: 5px;
     background: var(--primary-color);
+
+
 }
 .photo-button{
     width: 150px;
 }
 button:hover{
     background: var(--secondary-color);
+}
+
+.submit {
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+}
+
+input[type="file"] {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:disabled {
+
+    color: gray;
+    cursor: not-allowed;
 }
