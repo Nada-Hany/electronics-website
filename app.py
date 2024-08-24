@@ -4,14 +4,17 @@ import os
 import utils
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
+import validators
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-connection = db.connect_to_database()
 app.secret_key = "SUPER-SECRET"
 limiter = Limiter(app=app, key_func=get_remote_address,
                   default_limits=["50 per minute"], storage_uri="memory://")
+
+UPLOAD_FOLDER = 'static/uploads'
+
+connection = db.connect_to_database()
 
 
 db.init_db(connection)
@@ -83,25 +86,6 @@ def signUp():
             return redirect(url_for('login'))
 
    return render_template("signUp.html")
-
-
-
-
-if __name__=='__main__' :
-  db.init_db(connection)
-  app.run(debug=True)
-from flask import Flask, render_template, request, redirect, url_for, flash
-import os
-import db
-import validators
-
-UPLOAD_FOLDER = 'static/uploads'
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-connection = db.connect_to_database()
-db.init_db(connection)
-
 
 
 @app.route('/product', methods=[ 'Get','POST'])
