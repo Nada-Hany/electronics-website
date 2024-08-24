@@ -1,48 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/userList.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/userList.css') }}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1>Users List</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Email</th>
-                    <th>Content Card</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user[0] }}</td>
-                    <td>{{ user[1] }}</td>
-                    <td>{{ user[2] }}</td>
-                    <td>{{ user[3] }}</td>
-                    <td>{{ user[4] }}</td>
-                   <!--  <td><img src="{{ url_for('static', filename='uploads/' ~ user.photo_name) }}" alt="User Photo" width="50"></td>-->
-                    <td>
-                      <form  method="POST" style="display:inline;">
-                        <input type="hidden" name="user_username" value="{{ user[1] }}">
-                        <button type="submit" name="action" value="edit">Edit</button>
-                     </form>
-                     <!-- Form for Delete -->
-                     <form method="POST" style="display:inline;">
-                        <input type="hidden" name="user_username" value="{{ user[1] }}">
-                        <button type="submit" name="action" value="delete">Delete</button>
-                     </form>
-                     </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <h1>Users List</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Contant Card</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+            <td>{{ user[4] }}</td>
+            <!--  <td><img src="{{ url_for('static', filename='uploads/' ~ user.photo_name) }}" alt="User Photo" width="50"></td>-->
+            <td>
+              <form method="POST" style="display: inline">
+                <input
+                  type="hidden"
+                  name="user_username"
+                  value="{{ user[1] }}"
+                />
+                <button type="submit" name="action" value="edit">Edit</button>
+              </form>
+              <!-- Form for Delete -->
+              <form method="POST" style="display: inline">
+                <input
+                  type="hidden"
+                  name="user_username"
+                  value="{{ user[1] }}"
+                />
+                <button type="submit" name="action" value="delete">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-</body>
+  </body>
 </html>

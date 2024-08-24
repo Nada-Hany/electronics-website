@@ -19,9 +19,6 @@ connection = db.connect_to_database()
 db.init_db(connection)
 
 
-if __name__ == '__main__':
-    db.init_db(connection)
-    app.run(debug=True)
 
 
 @app.route('/')
@@ -203,19 +200,13 @@ def admin_list():
         temp_username = request.form.get('user_username')
         if action == 'edit':
             
-            return redirect(url_for('admin_list'))
+            return redirect(url_for('update_profile'))
             # call update function 
         elif action == 'delete':
-
             db.delete_user(connection,temp_username) 
             return redirect(url_for('admin_list'))
 
-            # return redirect(url_for('admin_list'))
 
-    # if 'username' in session:
-    #     if session['username'] == 'admin':
-    #         users = db.get_all_users(connection)
-    #         return render_template('admin_dashboard.html', users=users)
-    #     else:
-    #         return render_template('index.html')
-    # return redirect(url_for('login'))
+if __name__ == '__main__':
+    db.init_db(connection)
+    app.run(debug=True)
