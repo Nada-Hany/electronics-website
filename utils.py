@@ -66,7 +66,4 @@ def valid_phone(phone):
         return False
     return True
 
-def requierd_Data(name,passw,email,phone):
-    if name or passw or email or phone == "":
-        return False
-    return True
+

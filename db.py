@@ -73,10 +73,22 @@ def update_photo(connection, filename , username):
     cursor.execute(query, (filename,username))  
     connection.commit()  
 
-def get_user(connection, username):
+def get_user_name(connection, username):
     cursor = connection.cursor()
     query = '''SELECT * FROM users WHERE username = ?'''
     cursor.execute(query, (username,))
+    return cursor.fetchone()
+
+def get_user_email(connection, email):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE email = ?'''
+    cursor.execute(query, (email,))
+    return cursor.fetchone()
+
+def get_user_phone(connection, phone):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE contact = ?'''
+    cursor.execute(query, (phone,))
     return cursor.fetchone()
 
 
@@ -96,7 +108,7 @@ def seed_admin_user(connection):
     admin_username = 'admin'
     admin_password = 'admin'
 
-    admin_user = get_user(connection, admin_username)
+    admin_user = get_user_name(connection, admin_username)
     if not admin_user:
         add_user(connection, admin_username, admin_password)
         print("Admin user seeded successfully.")
