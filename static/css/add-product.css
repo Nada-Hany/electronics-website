@@ -30,8 +30,13 @@ body{
     background-color:  #f8f8f8;
 }
 form{
+    align-items: center;
     width: 250px;
-    margin: 60px auto;
+    margin: 10px auto;
+}
+
+#photo-form{
+    margin-bottom: 0;
 }
 h1{
     color: var(--font);
@@ -47,6 +52,7 @@ p{
 }
 hr{
     border-top: 2px solid var(--secondary-color);
+    width: 252px;
 }
 .pic{
     margin: 140px 40px 0px 0px;
@@ -78,6 +84,7 @@ input{
     border: 1px solid gray;
 }
 button{
+    margin: 0 auto;
     border: none;
     outline: none;
     padding: 8px;
@@ -85,10 +92,22 @@ button{
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 15px 0px 20px 0px;
     border-radius: 5px;
     background: var(--primary-color);
 }
+
 button:hover{
     background:var(--btn);
 }
+
+
+.light-text {
+    font-weight: 300; /* Adjust to a lower value for lighter weight (100 to 300 is typically light) */
+    opacity: 0.7; /* Makes the text slightly lighter by reducing its opacity */
+    font-family: Arial, sans-serif; /* Optional: Ensure you use your desired font */
+    font-size: 14px; /* Adjust the font size as needed */
+    color: #333; /* Adjust the color as needed */
+}
+
+</span>

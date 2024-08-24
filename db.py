@@ -4,6 +4,7 @@ import utils
 def connect_to_database(name='database.db'):
     import sqlite3
     return sqlite3.connect(name, check_same_thread=False)
+    
 
 
 def init_db(connection):
@@ -23,9 +24,11 @@ def init_db(connection):
     cursor.execute('''
 		CREATE TABLE IF NOT EXISTS products (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL UNIQUE,
+			name TEXT NOT NULL ,
 			description TEXT,
-            price INTEGER NOT NULL
+            price INTEGER NOT NULL,
+            img TEXT Not Null,
+            Category TEXT Not Null
 		);
 	''')
 
@@ -38,6 +41,7 @@ def init_db(connection):
             FOREIGN KEY (products_id) REFERENCES products(id)
 		);
 	''')
+    
 
     connection.commit()
 
@@ -48,10 +52,10 @@ def add_user(connection, username, password, email ="", contact ="", img =""):
     cursor.execute(query, (username, hashed_password, email, contact, img))
     connection.commit()
 
-def add_product(connection, name, description, price):
+def add_product(connection,product_data):
     cursor = connection.cursor()
-    query = '''INSERT INTO products (name, description, price) VALUES (?, ?, ?)'''
-    cursor.execute(query, (name, description, price))
+    query = '''INSERT INTO products (name, description, price,img,Category) VALUES (?, ?, ?,?,?)'''
+    cursor.execute(query, (product_data['name'], product_data['description'], product_data['price'],product_data['img'],product_data['Category']))
     connection.commit()
 
 
@@ -67,11 +71,17 @@ def update_user(connection , user_data):
     cursor.execute(query,(user_data['email'] , user_data['contact'] , user_data['username']))
     connection.commit() 
 
-def update_photo(connection, filename , username):
+def update_user_photo(connection, filename , username):
     cursor = connection.cursor()  
     query = '''UPDATE users SET img = ? WHERE username = ?'''
     cursor.execute(query, (filename,username))  
     connection.commit()  
+
+def update_product_photo(connection, filename , name):
+    cursor = connection.cursor()  
+    query = '''UPDATE products SET img = ? WHERE name = ?'''
+    cursor.execute(query, (filename,name))  
+    connection.commit() 
 
 def get_user(connection, username):
     cursor = connection.cursor()
