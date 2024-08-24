@@ -1,4 +1,4 @@
-<span style="font-family: verdana, geneva, sans-serif;">/*  import google fonts */
+/*  import google fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 *{
   margin: 0;
@@ -85,4 +85,4 @@ table thead tr{
   background: var(--primary-color);
   color: #fff;
   transition: 0.5rem;
-}</span>
+}

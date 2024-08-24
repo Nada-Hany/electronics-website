@@ -1,4 +1,4 @@
-<span style="font-family: verdana, geneva, sans-serif;">*{
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -92,4 +92,3 @@ button{
 button:hover{
     background: var(--secondary-color);
 }
-</span>
