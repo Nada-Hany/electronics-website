@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, abort
+from markupsafe import escape
+from urllib.parse import urlparse
 import db
 import os
 import utils
@@ -27,8 +29,8 @@ def index():
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
-        username= request.form['username']
-        password= request.form['password']
+        username= escape(request.form['username'])
+        password= escape(request.form['password'])
         user = db.get_user(connection,username)
         if user:
             if utils.is_password_match(password,user[2]):
@@ -47,6 +49,13 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
+
+def is_valid_url(server):
+    parsed_url = urlparse(server)
+    if parsed_url.scheme not in ['http', 'https']:
+        return False
+    whitelist = [5000]
+    return parsed_url.port in whitelist
 
 if __name__ == '__main__':
     db.init_db(connection)
