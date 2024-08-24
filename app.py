@@ -186,3 +186,6 @@ def upload():
     else:
         return redirect(url_for('login'))
 
+if __name__ == '__main__':
+    db.init_db(connection)
+    app.run(debug=True)
