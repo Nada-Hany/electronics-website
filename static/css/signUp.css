@@ -89,3 +89,7 @@ button{
 button:hover{
     background:var(--secondary-color);
 }
+a {
+    color: var(--font);
+    text-decoration: none;
+}
