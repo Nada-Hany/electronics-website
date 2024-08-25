@@ -52,18 +52,15 @@
   <body>
     <!-- HEADER -->
     <header>
-      <!-- TOP HEADER -->
       <div id="top-header">
         <div class="container">
           <ul class="header-links pull-right">
             <li>
-              <a href="#"><i class="fa fa-user-o"></i> My Account</a>
+              <a href="{{ url_for('logout' ) }}"> log out</a>
             </li>
           </ul>
         </div>
       </div>
-      <!-- /TOP HEADER -->
-
       <!-- MAIN HEADER -->
       <div id="header">
         <!-- container -->
@@ -74,7 +71,7 @@
             <div class="col-md-3">
               <div class="header-logo">
                 <a href="#" class="logo">
-                  <img src=".../static/assets/img/logo.png" alt="" />
+                  <img src="../static/assets/img/logo.png" alt="" />
                 </a>
               </div>
             </div>
@@ -101,10 +98,9 @@
               <div class="header-ctn">
                 <!-- Wishlist -->
                 <div>
-                  <a href="#">
-                    <i class="fa fa-heart-o"></i>
-                    <span>Your Wishlist</span>
-                    <div class="qty">2</div>
+                  <a href="{{ url_for('update_profile' ) }}">
+                    <i class="fa fa-user"></i>
+                    <span>Your Account</span>
                   </a>
                 </div>
                 <!-- /Wishlist -->
@@ -118,49 +114,43 @@
                   >
                     <i class="fa fa-shopping-cart"></i>
                     <span>Your Cart</span>
-                    <div class="qty">3</div>
+                    <div class="qty">{{counter}}</div>
                   </a>
                   <div class="cart-dropdown">
                     <div class="cart-list">
                       <div class="product-widget">
                         <div class="product-img">
                           <img
-                            src=".../static/assets/img/product01.png"
+                            src="../static/assets/img/product01.png"
                             alt=""
                           />
                         </div>
-                        <div class="product-body">
-                          <h3 class="product-name">
-                            <a href="#">product name goes here</a>
-                          </h3>
-                          <h4 class="product-price">
-                            <span class="qty">1x</span>$980.00
-                          </h4>
-                        </div>
-                        <button class="delete">
-                          <i class="fa fa-close"></i>
-                        </button>
                       </div>
+
+                      {% for product in cart_products %}
                       <div class="product-widget">
                         <div class="product-img">
                           <img src="../static//img/product02.png" alt="" />
                         </div>
+
                         <div class="product-body">
                           <h3 class="product-name">
-                            <a href="#">product name goes here</a>
+                            <a href="#">{{product[1]}}</a>
                           </h3>
                           <h4 class="product-price">
-                            <span class="qty">3x</span>$980.00
+                            <span class="qty">3x</span>${{product[3]}}
                           </h4>
                         </div>
                         <button class="delete">
                           <i class="fa fa-close"></i>
                         </button>
                       </div>
+                      {% endfor %}
                     </div>
+
                     <div class="cart-summary">
-                      <small>3 Item(s) selected</small>
-                      <h5>SUBTOTAL: $2940.00</h5>
+                      <small>{{counter}} Item(s) selected</small>
+                      <h5>SUBTOTAL: ${{total_price}}</h5>
                     </div>
                     <div class="cart-btns">
                       <a href="#">View Cart</a>
@@ -226,7 +216,7 @@
           <div class="col-md-4 col-xs-6">
             <div class="shop">
               <div class="shop-img">
-                <img src=".../static/assets/img/shop01.png" alt="" />
+                <img src="../static/assets/img/shop01.png" alt="" />
               </div>
               <div class="shop-body">
                 <h3>Laptop<br />Collection</h3>
@@ -258,7 +248,7 @@
           <div class="col-md-4 col-xs-6">
             <div class="shop">
               <div class="shop-img">
-                <img src=".../static/assets/img/shop02.png" alt="" />
+                <img src="../static/assets/img/shop02.png" alt="" />
               </div>
               <div class="shop-body">
                 <h3>Cameras<br />Collection</h3>
@@ -303,80 +293,31 @@
           <!-- Products tab & slick -->
           <div class="col-md-12">
             <div class="row">
+              <!-- ------------------- 1ST HORIZONTAL SLIDER ------------------------------- -->
               <div class="products-tabs">
                 <!-- tab -->
                 <div id="tab1" class="tab-pane active">
                   <div class="products-slick" data-nav="#slick-nav-1">
-                    <!-- product -->
+                    <!--  -------------------------- product ------------------- -->
+                    {% for product in products %}
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product01.png" alt="" />
+                        <img
+                          img
+                          src="{{ url_for('static', filename=product[4]) }}"
+                          alt=""
+                        />
                         <div class="product-label">
-                          <span class="sale">-30%</span>
-                          <span class="new">NEW</span>
+                          <span class="new">{{product[6]}}</span>
                         </div>
                       </div>
                       <div class="product-body">
-                        <p class="product-category">Category</p>
+                        <p class="product-category">{{product[5]}}</p>
                         <h3 class="product-name">
-                          <a href="#">product name goes here</a>
+                          <a href="#">{{product[1]}}</a>
                         </h3>
-                        <h4 class="product-price">
-                          $980.00 <del class="product-old-price">$990.00</del>
-                        </h4>
-                        <div class="product-rating">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product-btns">
-                          <button class="add-to-wishlist">
-                            <i class="fa fa-heart-o"></i
-                            ><span class="tooltipp">add to wishlist</span>
-                          </button>
-                          <button class="add-to-compare">
-                            <i class="fa fa-exchange"></i
-                            ><span class="tooltipp">add to compare</span>
-                          </button>
-                          <button class="quick-view">
-                            <i class="fa fa-eye"></i
-                            ><span class="tooltipp">quick view</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="add-to-cart">
-                        <button class="add-to-cart-btn">
-                          <i class="fa fa-shopping-cart"></i> add to cart
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /product -->
+                        <h4 class="product-price">${{product[3]}}</h4>
 
-                    <!-- product -->
-                    <div class="product">
-                      <div class="product-img">
-                        <img src=".../static/assets/img/product02.png" alt="" />
-                        <div class="product-label">
-                          <span class="new">NEW</span>
-                        </div>
-                      </div>
-                      <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name">
-                          <a href="#">product name goes here</a>
-                        </h3>
-                        <h4 class="product-price">
-                          $980.00 <del class="product-old-price">$990.00</del>
-                        </h4>
-                        <div class="product-rating">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star-o"></i>
-                        </div>
                         <div class="product-btns">
                           <button class="add-to-wishlist">
                             <i class="fa fa-heart-o"></i
@@ -393,138 +334,16 @@
                         </div>
                       </div>
                       <div class="add-to-cart">
-                        <button class="add-to-cart-btn">
-                          <i class="fa fa-shopping-cart"></i> add to cart
-                        </button>
+                        <form method="post">
+                          <input type="hidden" name="cart-btn" name="cart" />
+                          <button class="add-to-cart-btn">
+                            <i class="fa fa-shopping-cart"></i> aaaadd to cart
+                          </button>
+                        </form>
                       </div>
                     </div>
-                    <!-- /product -->
-
-                    <!-- product -->
-                    <div class="product">
-                      <div class="product-img">
-                        <img src=".../static/assets/img/product03.png" alt="" />
-                        <div class="product-label">
-                          <span class="sale">-30%</span>
-                        </div>
-                      </div>
-                      <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name">
-                          <a href="#">product name goes here</a>
-                        </h3>
-                        <h4 class="product-price">
-                          $980.00 <del class="product-old-price">$990.00</del>
-                        </h4>
-                        <div class="product-rating"></div>
-                        <div class="product-btns">
-                          <button class="add-to-wishlist">
-                            <i class="fa fa-heart-o"></i
-                            ><span class="tooltipp">add to wishlist</span>
-                          </button>
-                          <button class="add-to-compare">
-                            <i class="fa fa-exchange"></i
-                            ><span class="tooltipp">add to compare</span>
-                          </button>
-                          <button class="quick-view">
-                            <i class="fa fa-eye"></i
-                            ><span class="tooltipp">quick view</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="add-to-cart">
-                        <button class="add-to-cart-btn">
-                          <i class="fa fa-shopping-cart"></i> add to cart
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /product -->
-
-                    <!-- product -->
-                    <div class="product">
-                      <div class="product-img">
-                        <img src=".../static/assets/img/product04.png" alt="" />
-                      </div>
-                      <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name">
-                          <a href="#">product name goes here</a>
-                        </h3>
-                        <h4 class="product-price">
-                          $980.00 <del class="product-old-price">$990.00</del>
-                        </h4>
-                        <div class="product-rating">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product-btns">
-                          <button class="add-to-wishlist">
-                            <i class="fa fa-heart-o"></i
-                            ><span class="tooltipp">add to wishlist</span>
-                          </button>
-                          <button class="add-to-compare">
-                            <i class="fa fa-exchange"></i
-                            ><span class="tooltipp">add to compare</span>
-                          </button>
-                          <button class="quick-view">
-                            <i class="fa fa-eye"></i
-                            ><span class="tooltipp">quick view</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="add-to-cart">
-                        <button class="add-to-cart-btn">
-                          <i class="fa fa-shopping-cart"></i> add to cart
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /product -->
-
-                    <!-- product -->
-                    <div class="product">
-                      <div class="product-img">
-                        <img src=".../static/assets/img/product05.png" alt="" />
-                      </div>
-                      <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name">
-                          <a href="#">product name goes here</a>
-                        </h3>
-                        <h4 class="product-price">
-                          $980.00 <del class="product-old-price">$990.00</del>
-                        </h4>
-                        <div class="product-rating">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product-btns">
-                          <button class="add-to-wishlist">
-                            <i class="fa fa-heart-o"></i
-                            ><span class="tooltipp">add to wishlist</span>
-                          </button>
-                          <button class="add-to-compare">
-                            <i class="fa fa-exchange"></i
-                            ><span class="tooltipp">add to compare</span>
-                          </button>
-                          <button class="quick-view">
-                            <i class="fa fa-eye"></i
-                            ><span class="tooltipp">quick view</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="add-to-cart">
-                        <button class="add-to-cart-btn">
-                          <i class="fa fa-shopping-cart"></i> add to cart
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /product -->
+                    {% endfor %}
+                    <!--  --------------------------END OF PRODUCT ------------------- -->
                   </div>
                   <div id="slick-nav-1" class="products-slick-nav"></div>
                 </div>
@@ -620,7 +439,7 @@
                     <!-- product -->
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product06.png" alt="" />
+                        <img src="../static/assets/img/product06.png" alt="" />
                         <div class="product-label">
                           <span class="sale">-30%</span>
                           <span class="new">NEW</span>
@@ -667,7 +486,7 @@
                     <!-- product -->
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product07.png" alt="" />
+                        <img src="../static/assets/img/product07.png" alt="" />
                         <div class="product-label">
                           <span class="new">NEW</span>
                         </div>
@@ -713,7 +532,7 @@
                     <!-- product -->
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product08.png" alt="" />
+                        <img src="../static/assets/img/product08.png" alt="" />
                         <div class="product-label">
                           <span class="sale">-30%</span>
                         </div>
@@ -753,7 +572,7 @@
                     <!-- product -->
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product09.png" alt="" />
+                        <img src="../static/assets/img/product09.png" alt="" />
                       </div>
                       <div class="product-body">
                         <p class="product-category">Category</p>
@@ -796,7 +615,7 @@
                     <!-- product -->
                     <div class="product">
                       <div class="product-img">
-                        <img src=".../static/assets/img/product01.png" alt="" />
+                        <img src="../static/assets/img/product01.png" alt="" />
                       </div>
                       <div class="product-body">
                         <p class="product-category">Category</p>
@@ -869,7 +688,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product07.png" alt="" />
+                    <img src="../static/assets/img/product07.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -886,7 +705,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product08.png" alt="" />
+                    <img src="../static/assets/img/product08.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -903,7 +722,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product09.png" alt="" />
+                    <img src="../static/assets/img/product09.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -922,7 +741,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product01.png" alt="" />
+                    <img src="../static/assets/img/product01.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -939,7 +758,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product02.png" alt="" />
+                    <img src="../static/assets/img/product02.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -956,7 +775,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product03.png" alt="" />
+                    <img src="../static/assets/img/product03.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -986,7 +805,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product04.png" alt="" />
+                    <img src="../static/assets/img/product04.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1003,7 +822,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product05.png" alt="" />
+                    <img src="../static/assets/img/product05.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1020,7 +839,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product06.png" alt="" />
+                    <img src="../static/assets/img/product06.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1039,7 +858,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product07.png" alt="" />
+                    <img src="../static/assets/img/product07.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1056,7 +875,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product08.png" alt="" />
+                    <img src="../static/assets/img/product08.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1073,7 +892,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product09.png" alt="" />
+                    <img src="../static/assets/img/product09.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1105,7 +924,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product01.png" alt="" />
+                    <img src="../static/assets/img/product01.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1122,7 +941,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product02.png" alt="" />
+                    <img src="../static/assets/img/product02.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1139,7 +958,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product03.png" alt="" />
+                    <img src="../static/assets/img/product03.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1158,7 +977,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product04.png" alt="" />
+                    <img src="../static/assets/img/product04.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1175,7 +994,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product05.png" alt="" />
+                    <img src="../static/assets/img/product05.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>
@@ -1192,7 +1011,7 @@
                 <!-- product widget -->
                 <div class="product-widget">
                   <div class="product-img">
-                    <img src=".../static/assets/img/product06.png" alt="" />
+                    <img src="../static/assets/img/product06.png" alt="" />
                   </div>
                   <div class="product-body">
                     <p class="product-category">Category</p>

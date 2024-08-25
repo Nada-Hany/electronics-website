@@ -12,13 +12,14 @@
           <h1>Add New Product</h1>
           <hr />
           <form id="photo-form" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="form_name" value="upload_photo" />
             <label>Product Image</label>
             <div class="light-text">JPG or PNG no larger than 5 MB</div>
-            <input type="hidden" name="form_name" value="upload_photo" />
             <input
               id="img-account-profile-file"
               type="file"
               name="profile_picture"
+              value="photo"
               class="form-control mb-2"
             />
             <button type="submit">upload photo</button>

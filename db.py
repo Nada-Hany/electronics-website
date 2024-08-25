@@ -27,8 +27,9 @@ def init_db(connection):
 			name TEXT NOT NULL ,
 			description TEXT,
             price INTEGER NOT NULL,
-            img TEXT Not Null,
-            Category TEXT Not Null
+            img TEXT,
+            Category TEXT Not Null,
+            type TEXT
 		);
 	''')
 
@@ -54,10 +55,9 @@ def add_user(connection, username, password, email ="", contact ="", img =""):
 
 def add_product(connection,product_data):
     cursor = connection.cursor()
-    query = '''INSERT INTO products (name, description, price,img,Category) VALUES (?, ?, ?,?,?)'''
-    cursor.execute(query, (product_data['name'], product_data['description'], product_data['price'],product_data['img'],product_data['Category']))
+    query = '''INSERT INTO products (name, description, price,img,Category, type) VALUES (?, ?, ?,?,?,?)'''
+    cursor.execute(query, (product_data['name'], product_data['description'], product_data['price'],product_data['img'],product_data['Category'],product_data['type']))
     connection.commit()
-
 
 def delete_user(connection, username):
     cursor = connection.cursor()
@@ -87,6 +87,41 @@ def get_user(connection, username):
     cursor = connection.cursor()
     query = '''SELECT * FROM users WHERE username = ?'''
     cursor.execute(query, (username,))
+    return cursor.fetchone()
+
+def add_to_cart(connection, username, productID):
+    pass
+
+
+def get_cart_products(connection, username):
+    user = get_user(connection, username)
+    cursor = connection.cursor()
+    query ='''
+        SELECT products_id
+        FROM payment 
+        WHERE user_id = ?;
+    '''
+    cursor.execute(query, (user[0],))
+    print("query -------------------")
+    print("")
+    tmp = cursor.fetchall()
+    products =[]
+    for product in tmp:
+        products.append(get_product_byID(connection,product))
+
+    return products, len(tmp)
+
+def get_all_products(connection):
+    cursor = connection.cursor()
+    query = 'SELECT * FROM products'
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def get_product_byID(connection, id):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM products WHERE id = ?'''
+    cursor.execute(query, (id,))
     return cursor.fetchone()
 
 def get_product(connection, name):
