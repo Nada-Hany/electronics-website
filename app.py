@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, abort
 from markupsafe import escape
 from urllib.parse import urlparse
+from itsdangerous import TimedSerializer as ts
 import db
 import os
 import utils
@@ -18,6 +19,7 @@ db.init_db(connection)
 @app.route('/')
 def index():
     if 'username' in session:
+        print(session['username'])
         if session['username'] == 'admin':
             return list(db.get_all_users(connection))
         else:
@@ -56,6 +58,18 @@ def is_valid_url(server):
         return False
     whitelist = [5000]
     return parsed_url.port in whitelist
+
+@app.route('/forget_password',methods=['POST','GET'])
+def forget_password():
+    if request.method== 'POST':
+        email= escape(request.form['email'])
+        user = db.get_user_by_email(connection,email)
+        if user:
+            
+            return "sent email successfully"
+        else:
+            return render_template('forget-password.html')
+    return render_template('forget-password.html')
 
 if __name__ == '__main__':
     db.init_db(connection)

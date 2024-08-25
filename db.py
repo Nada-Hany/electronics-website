@@ -79,6 +79,12 @@ def get_user(connection, username):
     cursor.execute(query, (username,))
     return cursor.fetchone()
 
+def get_user_by_email(connection,email):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE email = ?'''
+    cursor.execute(query, (email,))
+    return cursor.fetchone()
+
 def get_product(connection, name):
     cursor = connection.cursor()
     query = '''SELECT * FROM products WHERE name = ?'''
