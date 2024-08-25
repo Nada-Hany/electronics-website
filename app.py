@@ -14,7 +14,7 @@ db.init_db(connection)
 def checkout ():
     product_id = request.args.get('product_id')
     price = request.args.get('price')
-    real_price = utils.get_product_by_id(PRODUCTS, product_id).get('price')
+    real_price = utils.get_product_by_id(products, product_id).get('price')
     session['Correct_MAC'] = utils.create_mac(real_price)
 
     if request.method == 'POST':

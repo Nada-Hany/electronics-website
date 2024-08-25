@@ -1,7 +1,9 @@
 import re
-import bcrypt
+import bcrypt 
+
 import hmac
 import hashlib
+
 
 
 def hash_password(password):
@@ -24,6 +26,9 @@ def is_strong_password(password):
     require_digit = True
     require_special_char = True
 
+    if password ==" ": 
+        return False
+    
     if len(password) < min_length:
         return False
 
@@ -38,7 +43,34 @@ def is_strong_password(password):
 
     if require_special_char and not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return False
+    return True
 
+def valid_email(email):
+    email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    if not re.search(email_regex, email) :
+        return False
+    return True
+
+def valid_username(username):
+    min_len = 3
+    if len(username) < min_len:
+      return False
+    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", username):
+        return False
+    return True
+
+def valid_phone(phone):
+    ph_len = 11
+    ph_regex = r'^\d+$'
+    if len(phone) != ph_len:
+        return False
+    if not re.search(ph_regex, phone) :
+        return False
+    return True
+
+def requierd_Data(name,passw,email,phone):
+    if name or passw or email or phone == "":
+        return False
     return True
 def validate_input(strinp):
 
