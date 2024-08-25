@@ -1,5 +1,5 @@
 import re
-import bcrypt 
+import bcrypt  # type: ignore
 
 import hmac
 import hashlib
@@ -91,7 +91,7 @@ def is_valid_card_number(card_number):
     return True
 def get_product_by_id(products_list, product_id):
     for product in products_list:
-        if product['id'] == int(product_id):
+        if product['product_id'] == int(product_id):
             return product
     return None
 

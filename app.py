@@ -12,8 +12,13 @@ app.secret_key = "SUPER-SECRET"
 db.init_db(connection)
 @app.route('/checkout',methods=['POST', 'GET'])
 def checkout ():
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM products')
+    products = cursor.fetchall()
+
     product_id = request.args.get('product_id')
     price = request.args.get('price')
+
     real_price = utils.get_product_by_id(products, product_id).get('price')
     session['Correct_MAC'] = utils.create_mac(real_price)
 
