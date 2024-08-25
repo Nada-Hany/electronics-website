@@ -1,5 +1,7 @@
 import re
 import bcrypt
+import hmac
+import hashlib
 
 
 def hash_password(password):
@@ -38,3 +40,31 @@ def is_strong_password(password):
         return False
 
     return True
+def validate_input(strinp):
+
+   if re.search(r"[!@#$%^&*(),.?\":{}|<>]", strinp):
+    return True
+
+    return False
+
+def validate_input(tel):
+    if len(tel) < 10 or not tel.isdigit():
+        return False
+
+    return True
+
+def is_valid_card_number(card_number):
+    if not card_number.isdigit() or not (13 <= len(card_number) <= 19):
+        return False
+    return True
+def get_product_by_id(products_list, product_id):
+    for product in products_list:
+        if product['id'] == int(product_id):
+            return product
+    return None
+
+def create_mac(price):
+    secret_key = b'supersecretkey'
+    price_bytes = str(price).encode('utf-8')
+    mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
+    return mac

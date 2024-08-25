@@ -22,7 +22,7 @@ def init_db(connection):
 
     cursor.execute('''
 		CREATE TABLE IF NOT EXISTS products (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			product_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT NOT NULL UNIQUE,
 			description TEXT,
             price INTEGER NOT NULL

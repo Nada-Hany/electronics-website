@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../.git"
+		},
+		{
+			"path": "../.vscode"
+		},
+		{
+			"path": "../__pycache__"
+		},
+		{
+			"path": "../assets"
+		},
+		{
+			"path": "../static"
+		},
+		{
+			"path": "."
+		}
+	]
+}
