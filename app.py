@@ -7,14 +7,11 @@ from flask_limiter.util import get_remote_address
 import validators
 from werkzeug.utils import secure_filename
 
-
-
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.secret_key = "SUPER-SECRET"
 limiter = Limiter(app=app, key_func=get_remote_address,
-                  default_limits=["50 per minute"], storage_uri="memory://")
+default_limits=["50 per minute"], storage_uri="memory://")
 
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -61,78 +58,91 @@ def login():
             return render_template('login.html')
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     
     session.pop('username', None)
     return redirect(url_for('login'))
 
-#Resister 
-@app.route('/register', methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 @limiter.limit("10 per minute")
 def signUp():
-   if request.method == 'POST':
+    if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         email = request.form.get('email')
         phone = request.form.get('phone')
 
-
-        if not username or not password or not email or not phone :
-            flash("Missing Data", "danger")
+        # Validate input fields
+        if not username or not password or not email or not phone:
+            flash("All fields are required.", "danger")
         elif not utils.valid_username(username):
-            flash("invalid username", "danger")
-            return render_template('signUp.html')    
-        elif not utils.is_strong_password(password):
-            flash("Weak Password Please Choose a stronger one", "danger")
-            return render_template('signUp.html')
+            flash("Invalid username. Must be at least 3 characters long and contain no special characters.", "danger")
+        elif utils.is_strong_password(password) != "Password is strong.":
+            flash("Weak password. Ensure your password is at least 8 characters long, includes uppercase and lowercase letters, a digit, and a special character.", "danger")
         elif not utils.valid_email(email):
-            flash("invalid email", "danger")
-            return render_template('signUp.html')
+            flash("Invalid email address.", "danger")
         elif not utils.valid_phone(phone):
-            flash("invalid phone number", "danger")
-            return render_template('signUp.html')
-        else :
-          user = db.get_user(connection, username)
-          if user:
-            flash("Username already exists.", "danger")
-            return render_template('signUp.html')
-          else:
-            db.add_user(connection, username, password , email, phone )
-            return redirect(url_for('login'))
+            flash("Phone number should be 11 digits long and contain only digits.", "danger")
+        else:
+            user = db.get_user(connection, username)
+            if user:
+                flash("Username already exists.", "danger")
+            else:
+                hashed_password = utils.hash_password(password)
+                db.add_user(connection, username, hashed_password, email, phone)
+                flash("User registered successfully!", "success")
+                return redirect(url_for('login'))  # Redirect to login page or wherever appropriate
 
-   return render_template("signUp.html")
+    # Render the signup page with any flash messages
+    return render_template("signUp.html")
 
 
-@app.route('/product', methods=[ 'Get','POST'])
+
+@app.route('/product', methods=['GET', 'POST'])
 def product():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
     if request.method == 'POST':
         form_type = request.form.get('form_name')
-        if form_type == 'upload_photo':
-            photo = request.files.get('profile_picture')
+
+        if form_type == 'upload_product':
+            photo = request.files.get('product_picture')
             if photo:
                 if not validators.allowed_file_size(photo):
-                    return f"Unallowed photo size."
+                    return "Unallowed size."
                 elif not validators.allowed_file(photo.filename):
-                    return f"Unallowed photo extention."
-            filename = secure_filename(photo.filename)
-            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        elif form_type == 'upload_product':
+                    return "Unallowed extension."
+                else:
+                    filename = secure_filename(photo.filename)
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    photo.save(file_path)
+            else:
+                filename = None
+
             product_data = {
-                    "name": request.form.get('product_name'),
-                    "description": request.form.get('description'),
-                    "price": request.form.get('price'),
-                    "img":  request.form.get('photo'),
-                    "Category": request.form.get('Category')
+                "name": request.form.get('product_name'),
+                "description": request.form.get('description'),
+                "price": request.form.get('price'),
+                "category": request.form.get('category'),
+                "img": filename
             }
 
-            for data in product_data.values():
-                if data == None or data =='':
-                    return 'enter full data'
-            db.add_product(connection,product_data)
-            return f'product added'
-    
-    return render_template('add-product.html')
+            db.add_product(connection, **product_data)
+            flash('Product added successfully.')
+
+            return redirect(url_for('product', name=product_data["name"]))
+
+    product_name = request.args.get('name')
+    product = None
+    if product_name:
+        product = db.get_product(connection, product_name)
+
+    return render_template('add-product.html', product=product)
+
     
 
 @app.route('/add_product')
@@ -186,7 +196,7 @@ def update_profile():
                     return "Unallowed extension."
                 else:
                     filename = secure_filename(photo.filename)
-                    db.update_user_photo(connection, filename, username)
+                    db.update_photo(connection, filename, username)
                     photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     flash('Photo uploaded successfully.')
 
