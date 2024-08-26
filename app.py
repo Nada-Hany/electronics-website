@@ -242,40 +242,19 @@ def admin_page():
     return render_template('admin-page.html')
 
 
-
-@app.route('/search', methods=['POST', 'GET'])
+@app.route('/search', methods=[ 'GET'])
 def search():
     if request.method == 'GET':
         categ = request.args.get('category')
         if categ:
             products = db.get_products_by_category(connection, categ)
-            print("Products fetched:", products)  # Debugging line
             return render_template('search-results.html', products=products)
         else:
             return render_template('search-results.html', products=[])
-    elif request.method == 'POST':
-        categ = request.form.get('category')
-        if categ:
-            products = db.get_products_by_category(connection, categ)
-            print("Products fetched:", products)  # Debugging line
-            return render_template('search-results.html', products=products)
-        else:
-            return redirect(url_for('search'))
+    
+    
 
-    
-    if request.method == 'GET':
-        categ = request.args.get('category')  
-        if categ:
-            products = db.get_products_by_category(connection, categ)
-            if products:
-               # show products
-               return render_template('search-results.html', products=products)
-            else:
-                return "No products found."
-        else:
-            return render_template('search-results.html')  
-    
-    return render_template('search-results.html', products=products) 
+
 if __name__ == '__main__':
     db.init_db(connection)
     app.run(debug=True)
