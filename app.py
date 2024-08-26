@@ -28,6 +28,8 @@ def checkout ():
         cardholder=request.form['cardholder']
         address=request.form['address']
         tel=request.form['tel']
+        order_notes = escape(request.form.get('order_notes'))
+        print(f"Received order notes: {order_notes}")
         user = db.get_user(connection, username)
         if not user:
             flash("Username Not Exists")
@@ -64,6 +66,18 @@ def confirm_pur():
         return f"Purchase confirmed at price ${price}."
     else:
         return f"Purchase Failed, Please Try Again",400
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

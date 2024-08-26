@@ -1,5 +1,6 @@
 import re
-import bcrypt  # type: ignore
+import bcrypt   # type: ignore
+
 
 import hmac
 import hashlib
