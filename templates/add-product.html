@@ -1,51 +1,96 @@
-<div class="products-slick" data-nav="#slick-nav-1">
-  <!--  -------------------------- product ------------------- -->
-  {% for product in products %}
-  <div class="product">
-    <div class="product-img">
-      <img
-        src="{{ url_for('static', filename='uploads/' ~ product[5]) }}"
-        alt="Product Image"
-        style="max-width: 200px"
-      />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add New Product | By Code Info</title>
+    <link rel="stylesheet" href="../static/css/add-product.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="product-form">
+        <form
+          action="{{ url_for('product') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <h1>Add New Product</h1>
 
-      <div class="product-label">
-        <span class="new">{{product[6]}}</span>
-      </div>
-    </div>
-    <div class="product-body">
-      <p class="product-category">{{product[4]}}</p>
-      <h3 class="product-name">
-        <a href="#">{{product[1]}}</a>
-      </h3>
-      <h4 class="product-price">${{product[3]}}</h4>
+          <hr />
+          <br />
 
-      <div class="product-btns">
-        <button class="add-to-wishlist">
-          <i class="fa fa-heart-o"></i
-          ><span class="tooltipp">add to wishlist</span>
-        </button>
-        <button class="add-to-compare">
-          <i class="fa fa-exchange"></i
-          ><span class="tooltipp">add to compare</span>
-        </button>
-        <button class="quick-view">
-          <i class="fa fa-eye"></i><span class="tooltipp">quick view</span>
-        </button>
+          <label>Product Name</label>
+          <input
+            type="text"
+            name="product_name"
+            placeholder="Enter product name"
+          />
+
+          <label>Description</label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Enter description"
+          />
+
+          <label>Price</label>
+          <input type="text" name="price" placeholder="Enter price" />
+
+          <label>Category</label>
+          <input type="text" name="category" placeholder="Enter category" />
+
+          <label class="file-upload-label">
+            <input type="file" name="product_picture" class="file-input" />
+            <span class="file-upload-button">Upload Product Image</span>
+          </label>
+
+          <br />
+          <br />
+          <hr />
+          <input type="hidden" name="form_name" value="upload_product" />
+          <div class="submit">
+            <button type="submit">Add Product</button>
+          </div>
+        </form>
       </div>
+
+      {% if product %}
+      <div class="new-product-info">
+        <h1>The New Product Added Successfully!</h1>
+        <div class="product-details">
+          <table>
+            <tr>
+              <th>Product Name</th>
+              <td>{{ product[1] }}</td>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <td>{{ product[2] }}</td>
+            </tr>
+            <tr>
+              <th>Price</th>
+              <td>${{ product[3] }}</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>{{ product[5] }}</td>
+            </tr>
+            <tr>
+              <th>Product Image</th>
+              <td>
+                {% if product[5] %}
+                <img
+                  src="{{ url_for('static', filename='uploads/' ~ product[5]) }}"
+                  alt="Product Image"
+                  style="max-width: 300px"
+                />
+                {% else %} No product image uploaded. {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      {% endif %}
     </div>
-    <div class="add-to-cart">
-      <form method="post">
-        <input type="hidden" name="cart-btn" name="cart" />
-        <button class="add-to-cart-btn">
-          <a
-            href="{{ url_for('add_product', product_id=product.id ) }}"
-            class="fa fa-shopping-cart"
-            >add to cart</a
-          >
-        </button>
-      </form>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+  </body>
+</html>

@@ -6,6 +6,10 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import validators
 from werkzeug.utils import secure_filename
+from markupsafe import escape
+from urllib.parse import urlparse
+
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -139,8 +143,9 @@ def product():
 
             return redirect(url_for('product', name=product_data["name"]))
 
-    product_name = request.args.get('name')
+    product_id = request.form['product_id']
     product = None
+    # rusul- ------------------------------------------
     if product_name:
         product = db.get_product(connection, product_name)
 
@@ -250,6 +255,69 @@ def admin_page():
     if request.method == 'POST' and action=='log-out':
         return redirect(url_for('logout'))
     return render_template('admin-page.html')
+
+
+@app.route('/checkout', methods=['POST', 'GET'])
+def checkout ():
+    # 3ayzen kol id mn el fel add cart -------------
+
+    products_id, counter = db.get_cart_products(connection, session.get('username'))
+    whole_products = []
+    real_price = 0
+    for id in products_id:
+        p = db.get_product_byID(connection, id)
+        whole_products.append(p)
+        real_price += p[3]
+    session['Correct_MAC'] = utils.create_mac(real_price)
+
+    if request.method == 'POST':
+        username = request.form['username']
+        card_number = request.form['card-number']
+        cardholder=request.form['cardholder']
+        address=request.form['address']
+        tel=request.form['tel']
+        order_notes = escape(request.form.get('order_notes'))
+        print(f"Received order notes: {order_notes}")
+        user = db.get_user(connection, username)
+        if not user:
+            flash("Username Not Exists")
+            return redirect(url_for('signUP.html'))
+        elif not utils.is_valid_card_number(card_number) :
+            flash("Invalid card number", "danger")
+            return render_template('checkout.html')
+
+        elif utils.validate_input(cardholder):
+            flash("Special Characters Are Not Allowed in Cardholder","warning")
+            return render_template('checkout.html')
+
+        elif utils.validate_input(address):
+            flash("Special Characters Are Not Allowed in Address","warning")
+            return render_template('checkout.html')
+
+        elif not utils.validate_phone(tel):
+            flash("Invalid Phone Number")
+            return render_template('checkout.html')
+
+        else:
+            return redirect(url_for('confirm.html'))
+
+    return render_template('checkout.html', products=whole_products, price=real_price, counter = counter, username = session.get('username'))
+
+
+
+@app.route('/confirm',methods=['POST', 'GET'])
+def confirm():
+    
+    price = request.args.get('price')
+    # price = request.form['price']
+
+    user_Correct_MAC = utils.create_mac(price)
+
+    if 'Correct_MAC' in session and session['Correct_MAC'] == user_Correct_MAC:
+        return f"Purchase confirmed at price ${price}."
+    else:
+        return f"Purchase Failed, Please Try Again",400
+
 
 if __name__ == '__main__':
     db.init_db(connection)

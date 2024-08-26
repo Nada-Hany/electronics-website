@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>confirm purchase</title>
+    <link
+      rel="stylesheet"
+      href="C:\programming\python\electronics-website\static\css\confirm.css"
+    />
+  </head>
+  <body>
+    <h1>Confirm</h1>
+    <p>Product ID: {{ product_id }}</p>
+    <hr />
+    <p>Product Price: ${{ price }}</p>
+
+    <!-- <form action="{{ url_for('confirm') }}" method="POST">
+      <input type="hidden" name="price" value="{{ price }}" />
+      <input type="submit" class="btn btn-primary" value="Confirm Purchase" />
+    </form> -->
+
+    <form action="#" method="POST">
+      <input type="hidden" name="price" value="{{ price }}" />
+      <input type="submit" class="btn btn-primary" value="Confirm Purchase" />
+    </form>
+  </body>
+</html>

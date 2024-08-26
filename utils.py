@@ -1,6 +1,8 @@
 import re
 import bcrypt
-# from wtforms.validators import DataRequired,Length,Email,Regexp
+import hmac
+import hashlib
+
 
 
 
@@ -81,3 +83,39 @@ def required_data(name, passw, email, phone):
     if not phone:
         return "Phone number is required."
     return "All required fields are filled."
+
+
+def requierd_Data(name,passw,email,phone):
+    if name or passw or email or phone == "":
+        return False
+    return True
+
+def validate_input(strinp):
+    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", strinp):
+        return True
+
+    return False
+
+def validate_phone(tel):
+    if len(tel) < 10 or not tel.isdigit():
+        return False
+
+    return True
+
+def is_valid_card_number(card_number):
+    if not card_number.isdigit() or not (13 <= len(card_number) <= 19):
+        return False
+    return True
+
+
+def get_product_by_id(products_list, product_id):
+    for product in products_list:
+        if product['product_id'] == int(product_id):
+            return product
+    return None
+
+def create_mac(price):
+    secret_key = b'supersecretkey'
+    price_bytes = str(price).encode('utf-8')
+    mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
+    return mac

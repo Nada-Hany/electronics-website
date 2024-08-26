@@ -53,31 +53,7 @@
     <!-- HEADER -->
     <header>
       <!-- TOP HEADER -->
-      <div id="top-header">
-        <div class="container">
-          <ul class="header-links pull-left">
-            <li>
-              <a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a>
-            </li>
-            <li>
-              <a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a>
-            </li>
-            <li>
-              <a href="#"
-                ><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a
-              >
-            </li>
-          </ul>
-          <ul class="header-links pull-right">
-            <li>
-              <a href="#"><i class="fa fa-dollar"></i> USD</a>
-            </li>
-            <li>
-              <a href="#"><i class="fa fa-user-o"></i> My Account</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+
       <!-- /TOP HEADER -->
 
       <!-- MAIN HEADER -->
@@ -115,14 +91,6 @@
             <!-- ACCOUNT -->
             <div class="col-md-3 clearfix">
               <div class="header-ctn">
-                <!-- Wishlist -->
-                <div>
-                  <a href="#">
-                    <i class="fa fa-heart-o"></i>
-                    <span>Your Wishlist</span>
-                    <div class="qty">2</div>
-                  </a>
-                </div>
                 <!-- /Wishlist -->
 
                 <!-- Cart -->
@@ -134,7 +102,7 @@
                   >
                     <i class="fa fa-shopping-cart"></i>
                     <span>Your Cart</span>
-                    <div class="qty">3</div>
+                    <div class="qty">{{counter}}</div>
                   </a>
                   <div class="cart-dropdown">
                     <div class="cart-list">
@@ -174,7 +142,7 @@
                     </div>
                     <div class="cart-summary">
                       <small>3 Item(s) selected</small>
-                      <h5>SUBTOTAL: $2940.00</h5>
+                      <h5>SUBTOTAL: ${{ price }}</h5>
                     </div>
                     <div class="cart-btns">
                       <a href="#">View Cart</a>
@@ -264,26 +232,27 @@
               </div>
               <div class="form-group">
                 <input
-                  class="input"
+                  disabled
+                  class="input disapled"
                   type="text"
-                  name="first-name"
-                  placeholder="First Name"
+                  name="username"
+                  placeholder="{{username}}"
                 />
               </div>
               <div class="form-group">
                 <input
                   class="input"
                   type="text"
-                  name="last-name"
-                  placeholder="Last Name"
+                  name="crad_number"
+                  placeholder="1111-2222-3333-4444"
                 />
               </div>
               <div class="form-group">
                 <input
                   class="input"
-                  type="email"
-                  name="email"
-                  placeholder="Email"
+                  type="text"
+                  name="card holder"
+                  placeholder="Coding Market"
                 />
               </div>
               <div class="form-group">
@@ -294,30 +263,7 @@
                   placeholder="Address"
                 />
               </div>
-              <div class="form-group">
-                <input
-                  class="input"
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  class="input"
-                  type="text"
-                  name="country"
-                  placeholder="Country"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  class="input"
-                  type="text"
-                  name="zip-code"
-                  placeholder="ZIP Code"
-                />
-              </div>
+
               <div class="form-group">
                 <input
                   class="input"
@@ -432,9 +378,22 @@
             <!-- /Shiping Details -->
 
             <!-- Order notes -->
-            <div class="order-notes">
-              <textarea class="input" placeholder="Order Notes"></textarea>
-            </div>
+            <form action="/checkout" method="POST">
+              <div class="order-notes">
+                <textarea
+                  class="input"
+                  name="order_notes"
+                  placeholder="Order Notes"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                ,
+                style="background-color: red; color: white"
+              >
+                Submit Order Notes
+              </button>
+            </form>
             <!-- /Order notes -->
           </div>
 
@@ -449,14 +408,13 @@
                 <div><strong>TOTAL</strong></div>
               </div>
               <div class="order-products">
+                <!-- ------------------ products ------------------ -->
+                {% for product in products %}
                 <div class="order-col">
-                  <div>1x Product Name Goes Here</div>
-                  <div>$980.00</div>
+                  <div>{{product[1]}}</div>
+                  <div>$ {{product[3]}}</div>
                 </div>
-                <div class="order-col">
-                  <div>2x Product Name Goes Here</div>
-                  <div>$980.00</div>
-                </div>
+                {% endfor %}
               </div>
               <div class="order-col">
                 <div>Shiping</div>
@@ -464,7 +422,7 @@
               </div>
               <div class="order-col">
                 <div><strong>TOTAL</strong></div>
-                <div><strong class="order-total">$2940.00</strong></div>
+                <div><strong class="order-total">${{price}}</strong></div>
               </div>
             </div>
             <div class="payment-method">
@@ -518,7 +476,11 @@
                 I've read and accept the <a href="#">terms & conditions</a>
               </label>
             </div>
-            <a href="#" class="primary-btn order-submit">Place order</a>
+            <a
+              href="{{ url_for('confirm', price=price)}}"
+              class="primary-btn order-submit"
+              >Place order</a
+            >
           </div>
           <!-- /Order Details -->
         </div>

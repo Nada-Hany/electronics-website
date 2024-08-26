@@ -124,28 +124,31 @@ def get_cart_products(connection, username):
 
     return products, len(tmp)
 
-def get_cart_products(connection, username):
-    user = get_user(connection, username)
+
+
+
+# def get_cart_products(connection, username):
+#     user = get_user(connection, username)
     
-    if user is None:
-        return [], 0 
+#     if user is None:
+#         return [], 0 
     
-    cursor = connection.cursor()
-    query = '''
-        SELECT products_id
-        FROM payment 
-        WHERE user_id = ?;
-    '''
-    cursor.execute(query, (user[0],))
-    tmp = cursor.fetchall()
-    products = []
+#     cursor = connection.cursor()
+#     query = '''
+#         SELECT products_id
+#         FROM payment 
+#         WHERE user_id = ?;
+#     '''
+#     cursor.execute(query, (user[0],))
+#     tmp = cursor.fetchall()
+#     products = []
     
-    for product_id in tmp:
-        product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
-        if product:
-            products.append(product)
+#     for product_id in tmp:
+#         product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
+#         if product:
+#             products.append(product)
     
-    return products, len(tmp)
+#     return products, len(tmp)
 
 
 def get_all_products(connection):
