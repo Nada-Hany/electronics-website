@@ -96,6 +96,13 @@ def get_user(connection, username):
     cursor.execute(query, (username,))
     return cursor.fetchone()
 
+def get_user_byEmail(connection, email):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE email = ?'''
+    cursor.execute(query, (email,))
+    return cursor.fetchone()
+
+
 def add_to_cart(connection, username, productID):
     pass
 

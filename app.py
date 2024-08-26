@@ -42,10 +42,12 @@ def login():
         username= request.form['username']
         password= request.form['password']
         user = db.get_user(connection,username)
+
         if user:
             if utils.is_password_match(password,user[2]):
                 session['username']= user[1]
                 if(username != "admin"):
+                    print("valid username and pas ---------------------------")
                     return redirect(url_for('index'))
                 else:
                     return redirect(url_for('admin_page'))
@@ -88,8 +90,9 @@ def signUp():
             flash("Phone number should be 11 digits long and contain only digits.", "danger")
         else:
             user = db.get_user(connection, username)
-            if user:
-                flash("Username already exists.", "danger")
+            email = db.get_user_byEmail(connection, email)
+            if user or email: 
+                flash("Username/email already exists.", "danger")
             else:
                 hashed_password = utils.hash_password(password)
                 db.add_user(connection, username, hashed_password, email, phone)

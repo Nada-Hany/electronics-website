@@ -297,22 +297,20 @@
               <div class="products-tabs">
                 <!-- tab -->
                 <div id="tab1" class="tab-pane active">
+                  
                   <div class="products-slick" data-nav="#slick-nav-1">
                     <!--  -------------------------- product ------------------- -->
                     {% for product in products %}
                     <div class="product">
                       <div class="product-img">
-                        <img
-                          img
-                          src="{{ url_for('static', filename=product[4]) }}"
-                          alt=""
-                        />
+                        <img src="{{ url_for('static', filename='uploads/' ~ product[5]) }}" alt="Product Image" style="max-width: 200px;" />
+
                         <div class="product-label">
                           <span class="new">{{product[6]}}</span>
                         </div>
                       </div>
                       <div class="product-body">
-                        <p class="product-category">{{product[5]}}</p>
+                        <p class="product-category">{{product[4]}}</p>
                         <h3 class="product-name">
                           <a href="#">{{product[1]}}</a>
                         </h3>
@@ -347,8 +345,6 @@
                       </div>
                     </div>
                     {% endfor %}
-                    <!--  --------------------------END OF PRODUCT ------------------- -->
-                  </div>
                   <div id="slick-nav-1" class="products-slick-nav"></div>
                 </div>
                 <!-- /tab -->
@@ -1145,7 +1141,9 @@
               <div class="footer">
                 <h3 class="footer-title">Service</h3>
                 <ul class="footer-links">
-                  <li><a href="{{ url_for('update_profile') }}">My Account</a></li>
+                  <li>
+                    <a href="{{ url_for('update_profile') }}">My Account</a>
+                  </li>
                   <li><a href="#">View Cart</a></li>
                   <li><a href="#">Wishlist</a></li>
                   <li><a href="#">Track My Order</a></li>
