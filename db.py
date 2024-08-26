@@ -102,8 +102,7 @@ def get_cart_products(connection, username):
         WHERE user_id = ?;
     '''
     cursor.execute(query, (user[0],))
-    print("query -------------------")
-    print("")
+    print("in get cart product")
     tmp = cursor.fetchall()
     products =[]
     for product in tmp:
