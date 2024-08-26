@@ -80,26 +80,44 @@ def signUp():
 
         if not username or not password or not email or not phone :
             flash("Missing Data", "danger")
+
         elif not utils.valid_username(username):
             flash("invalid username", "danger")
             return render_template('signUp.html')    
+        
         elif not utils.is_strong_password(password):
             flash("Weak Password Please Choose a stronger one", "danger")
             return render_template('signUp.html')
+        
         elif not utils.valid_email(email):
             flash("invalid email", "danger")
             return render_template('signUp.html')
+        
         elif not utils.valid_phone(phone):
             flash("invalid phone number", "danger")
             return render_template('signUp.html')
+        
         else :
           user = db.get_user(connection, username)
+          user_email = db.get_user_email(connection, email)
+          user_phone = db.get_user_phone(connection, phone)
+
           if user:
             flash("Username already exists.", "danger")
             return render_template('signUp.html')
+          
+          elif user_email:
+            flash("email already exists.", "danger")
+            return render_template('signUp.html')
+        
+          elif user_phone:
+            flash("phone number already exists.", "danger")
+            return render_template('signUp.html')
+          
           else:
-            db.add_user(connection, username, password , email, phone )
+            db.add_user(connection, username, password, email, phone )
             return redirect(url_for('login'))
+
 
    return render_template("signUp.html")
 

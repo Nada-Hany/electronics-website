@@ -65,8 +65,3 @@ def valid_phone(phone):
     if not re.search(ph_regex, phone) :
         return False
     return True
-
-def requierd_Data(name,passw,email,phone):
-    if name or passw or email or phone == "":
-        return False
-    return True
