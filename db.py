@@ -49,7 +49,7 @@ def init_db(connection):
 
     connection.commit()
 
-def add_user(connection, username, password, email ="", contact ="", img =""):
+def add_user(connection, username, password, email , contact, img =""):
     cursor = connection.cursor()
     hashed_password = utils.hash_password(password)
     query = '''INSERT INTO users (username, password, email, contact, img) VALUES (?, ?, ?, ?, ?)'''
@@ -96,9 +96,20 @@ def get_user(connection, username):
     cursor.execute(query, (username,))
     return cursor.fetchone()
 
-def add_to_cart(connection, username, productID):
-    pass
+def get_user_byEmail(connection, email):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE email = ?'''
+    cursor.execute(query, (email,))
+    return cursor.fetchone()
 
+
+def add_to_cart(connection, username, productID):
+    user = get_user(connection=connection,username=username)
+    cursor = connection.cursor()
+    query= '''INSERT INTO payment (user_id, products_id) VALUES (?, ?)'''
+    print(user[0])
+    cursor.execute(query,(user[0],productID))
+    connection.commit()
 
 def get_cart_products(connection, username):
     user = get_user(connection, username)
@@ -111,34 +122,38 @@ def get_cart_products(connection, username):
     cursor.execute(query, (user[0],))
     print("in get cart product")
     tmp = cursor.fetchall()
+    print(tmp)
     products =[]
     for product in tmp:
         products.append(get_product_byID(connection,product))
 
     return products, len(tmp)
 
-def get_cart_products(connection, username):
-    user = get_user(connection, username)
+
+
+
+# def get_cart_products(connection, username):
+#     user = get_user(connection, username)
     
-    if user is None:
-        return [], 0 
+#     if user is None:
+#         return [], 0 
     
-    cursor = connection.cursor()
-    query = '''
-        SELECT products_id
-        FROM payment 
-        WHERE user_id = ?;
-    '''
-    cursor.execute(query, (user[0],))
-    tmp = cursor.fetchall()
-    products = []
+#     cursor = connection.cursor()
+#     query = '''
+#         SELECT products_id
+#         FROM payment 
+#         WHERE user_id = ?;
+#     '''
+#     cursor.execute(query, (user[0],))
+#     tmp = cursor.fetchall()
+#     products = []
     
-    for product_id in tmp:
-        product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
-        if product:
-            products.append(product)
+#     for product_id in tmp:
+#         product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
+#         if product:
+#             products.append(product)
     
-    return products, len(tmp)
+#     return products, len(tmp)
 
 
 def get_all_products(connection):
@@ -147,17 +162,11 @@ def get_all_products(connection):
     cursor.execute(query)
     return cursor.fetchall()
 
-def get_products_by_category(connection, category):
-    cursor = connection.cursor()
-    query = '''SELECT * FROM products WHERE Category = ?'''
-    cursor.execute(query, (category,))
-    return cursor.fetchall()
-
 
 def get_product_byID(connection, id):
     cursor = connection.cursor()
     query = '''SELECT * FROM products WHERE id = ?'''
-    cursor.execute(query, (id,))
+    cursor.execute(query, id)
     return cursor.fetchone()
 
 def get_product(connection, name):

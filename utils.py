@@ -7,13 +7,14 @@ import bcrypt
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode(), salt)
-
+    print(hashed_password, "while signing in")
     return hashed_password.decode()
 
 
 def is_password_match(entered_password, stored_hash):
     stored_hash_bytes = stored_hash.encode()
-
+    print(stored_hash_bytes, "hashed while log in hashed pass")
+    # print(entered_password.encode(), "actual password while logging in")
     return bcrypt.checkpw(entered_password.encode(), stored_hash_bytes)
 
 

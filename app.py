@@ -74,7 +74,7 @@ def signUp():
         password = request.form.get('password')
         email = request.form.get('email')
         phone = request.form.get('phone')
-
+        print("email ---", email)
         # Validate input fields
         if not username or not password or not email or not phone:
             flash("All fields are required.", "danger")
@@ -88,7 +88,8 @@ def signUp():
             flash("Phone number should be 11 digits long and contain only digits.", "danger")
         else:
             user = db.get_user(connection, username)
-            if user:
+            email_ = db.get_user_byEmail(connection, email)
+            if user or email_:
                 flash("Username already exists.", "danger")
             else:
                 hashed_password = utils.hash_password(password)
