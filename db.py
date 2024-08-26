@@ -116,6 +116,12 @@ def get_all_products(connection):
     cursor.execute(query)
     return cursor.fetchall()
 
+def get_products_by_category(connection, category):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM products WHERE Category = ?'''
+    cursor.execute(query, (category,))
+    return cursor.fetchall()
+
 
 def get_product_byID(connection, id):
     cursor = connection.cursor()

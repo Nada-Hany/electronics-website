@@ -106,6 +106,9 @@ def signUp():
 
 @app.route('/product', methods=[ 'Get','POST'])
 def product():
+    if 'admin'!= session['username']:
+        return render_template('login.html')
+
     if request.method == 'POST':
         form_type = request.form.get('form_name')
         if form_type == 'upload_photo':
@@ -238,6 +241,41 @@ def admin_page():
         return redirect(url_for('logout'))
     return render_template('admin-page.html')
 
+
+
+@app.route('/search', methods=['POST', 'GET'])
+def search():
+    if request.method == 'GET':
+        categ = request.args.get('category')
+        if categ:
+            products = db.get_products_by_category(connection, categ)
+            print("Products fetched:", products)  # Debugging line
+            return render_template('search-results.html', products=products)
+        else:
+            return render_template('search-results.html', products=[])
+    elif request.method == 'POST':
+        categ = request.form.get('category')
+        if categ:
+            products = db.get_products_by_category(connection, categ)
+            print("Products fetched:", products)  # Debugging line
+            return render_template('search-results.html', products=products)
+        else:
+            return redirect(url_for('search'))
+
+    
+    if request.method == 'GET':
+        categ = request.args.get('category')  
+        if categ:
+            products = db.get_products_by_category(connection, categ)
+            if products:
+               # show products
+               return render_template('search-results.html', products=products)
+            else:
+                return "No products found."
+        else:
+            return render_template('search-results.html')  
+    
+    return render_template('search-results.html', products=products) 
 if __name__ == '__main__':
     db.init_db(connection)
     app.run(debug=True)
