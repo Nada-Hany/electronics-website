@@ -108,11 +108,11 @@ def is_valid_card_number(card_number):
     return True
 
 
-def get_product_by_id(products_list, product_id):
-    for product in products_list:
-        if product['product_id'] == int(product_id):
-            return product
-    return None
+def get_product_byID(connection, id):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM products WHERE id = ?'''
+    cursor.execute(query, (id,))
+    return cursor.fetchone()
 
 def create_mac(price):
     secret_key = b'supersecretkey'

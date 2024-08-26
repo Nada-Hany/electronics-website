@@ -31,6 +31,8 @@ def index():
             return redirect(url_for('admin_page'))
         else:
             cart_products, counter = db.get_cart_products(connection, session.get('username'))
+            print(counter)
+            print(cart_products)
             total_price = 0
             products = db.get_all_products(connection)
             for product in cart_products:
@@ -43,8 +45,8 @@ def index():
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
-        username= request.form['username']
-        password= request.form['password']
+        username= escape(request.form['username'])
+        password= escape(request.form['password'])
         user = db.get_user(connection,username)
 
         if user:
@@ -143,14 +145,12 @@ def product():
 
             return redirect(url_for('product', name=product_data["name"]))
 
-    product_id = request.form['product_id']
+    product_name = request.args.get('name')
     product = None
-    # rusul- ------------------------------------------
     if product_name:
         product = db.get_product(connection, product_name)
 
     return render_template('add-product.html', product=product)
-
     
 
 @app.route('/add_product')
@@ -159,6 +159,7 @@ def add_product():
     product_id = request.args.get('product_id')
     username = session.get('username', "")
     print(product_id, "product id ----------  ", username)
+    db.add_to_cart(connection=connection,username=username,productID=product_id)
     return redirect(url_for('index'))
 
 @app.route('/update-profile', methods=['GET', 'POST'])
@@ -259,15 +260,13 @@ def admin_page():
 
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout ():
-    # 3ayzen kol id mn el fel add cart -------------
 
     products_id, counter = db.get_cart_products(connection, session.get('username'))
     whole_products = []
     real_price = 0
     for id in products_id:
-        p = db.get_product_byID(connection, id)
-        whole_products.append(p)
-        real_price += p[3]
+        whole_products.append(id)
+        real_price += id[3]
     session['Correct_MAC'] = utils.create_mac(real_price)
 
     if request.method == 'POST':
