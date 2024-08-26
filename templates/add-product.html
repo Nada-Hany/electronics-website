@@ -1,61 +1,83 @@
-<span style="font-family: verdana, geneva, sans-serif"
-  ><!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <title>adding a product</title>
-      <link rel="stylesheet" href="../static/css/add-product.css" />
-    </head>
-    <body>
-      <div class="container">
-        <div class="login">
-          <h1>Add New Product</h1>
-          <hr />
-          <form id="photo-form" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="form_name" value="upload_photo" />
-            <label>Product Image</label>
-            <div class="light-text">JPG or PNG no larger than 5 MB</div>
-            <input
-              id="img-account-profile-file"
-              type="file"
-              name="profile_picture"
-              value="photo"
-              class="form-control mb-2"
-            />
-            <button type="submit">upload photo</button>
-          </form>
-          <form id="upload-form" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="form_name" value="upload_product" />
-            <label>Product Name</label>
-            <input
-              type="text"
-              name="product_name"
-              placeholder="Enter product name"
-            />
-
-            <label>Description</label>
-            <input
-              type="text"
-              name="description"
-              placeholder="Enter description"
-            />
-
-            <label>Price</label>
-            <input type="text" name="price" placeholder="Enter price" />
-
-            <label>Category</label>
-            <input type="text" name="Category" placeholder="Enter category" />
-
-            <button type="submit">Add</button>
-          </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add New Product | By Code Info</title>
+    <link rel="stylesheet" href="../static/css/add-product.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="product-form">
+            <form action="{{ url_for('product') }}" method="POST" enctype="multipart/form-data">
+                <h1>Add New Product</h1>
+            
+                <hr>
+                <br>
+                
+                <label>Product Name</label>
+                <input type="text" name="product_name" placeholder="Enter product name" />
+            
+                <label>Description</label>
+                <input type="text" name="description" placeholder="Enter description" />
+            
+                <label>Price</label>
+                <input type="text" name="price" placeholder="Enter price" />
+            
+                <label>Category</label>
+                <input type="text" name="category" placeholder="Enter category" />
+                
+                <label class="file-upload-label">
+                    <input type="file" name="product_picture" class="file-input" />
+                    <span class="file-upload-button">Upload Product Image</span>
+                </label>
+                
+                <br>
+                <br>
+                <hr />
+                <input type="hidden" name="form_name" value="upload_product">
+                <div class="submit">
+                    <button type="submit">Add Product</button>
+                </div>
+            </form>
         </div>
 
-        <div class="pic">
-          <div class="log">
-            <!-- add photo or any thing  -->
-          </div>
-        </div>
-      </div>
-    </body>
-  </html>
-</span>
+        {% if product %}
+            <div class="new-product-info">
+                <h1>The New Product Added Successfully!</h1>
+                <div class="product-details">
+    
+                    <table>
+                        <tr>
+                            <th>Product Name</th>
+                            <td>{{ product[1] }}</td> 
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ product[2] }}</td> 
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td>${{ product[3] }}</td> 
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <td>{{ product[5] }}</td> 
+                        </tr>
+                        <tr>
+                            <th>Product Image</th>
+                            <td>
+                                {% if product[5] %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ product[5]) }}" alt="Product Image" style="max-width: 300px;" />
+                                {% else %}
+                                    No product image uploaded.
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        {% endif %}
+    </div>
+</body>
+</html>
