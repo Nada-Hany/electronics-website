@@ -26,10 +26,10 @@ db.init_db(connection)
 @app.route('/',methods=['POST','GET'])
 def index():
     if 'username' in session:
-        if session['username'] == 'admin':
+        if session.get('username') == 'admin':
             return redirect(url_for('admin_page'))
         else:
-            cart_products, counter = db.get_cart_products(connection, session['username'])
+            cart_products, counter = db.get_cart_products(connection, session.get('username'))
             total_price = 0
             products = db.get_all_products(connection)
             for product in cart_products:
@@ -135,6 +135,14 @@ def product():
     return render_template('add-product.html')
     
 
+@app.route('/add_product')
+def add_product():
+    print("inn add product to cart method ")
+    product_id = request.args.get('product_id')
+    username = session.get('username', "")
+    print(product_id, "product id ----------  ", username)
+    return redirect(url_for('index'))
+
 @app.route('/update-profile', methods=['GET', 'POST'])
 def update_profile():
     username = request.args.get('username')
@@ -144,10 +152,10 @@ def update_profile():
         return redirect(url_for('login'))
 
     if action != '2':
-        username = request.args.get('username', session['username'])
+        username = request.args.get('username', session.get('username'))
 
     if request.method == 'GET':
-        if action != '2' and username != session['username']:
+        if action != '2' and username != session.get('username'):
             return f"unauthorized"
         data = db.get_user(connection, username)
         return render_template('update-profile.html', data=data)
@@ -155,7 +163,7 @@ def update_profile():
     elif request.method == 'POST':
         form_type = request.form.get('form_name')
 
-        if action != '2' and username != session['username']:
+        if action != '2' and username != session.get('username'):
             return 'unauthorized'
 
         if form_type == 'update_user_data':
@@ -199,7 +207,7 @@ def upload():
             elif not validators.allowed_file(photo.filename):
                 return "Unallowed extension."
             else:
-                username = session['username']
+                username = session.get('username')
                 db.update_user_photo(connection, photo.filename, username)
                 photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
                 return redirect(url_for('update_profile'))
