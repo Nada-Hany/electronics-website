@@ -6,7 +6,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import validators
 from werkzeug.utils import secure_filename
-
+from markupsafe import escape
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.secret_key = "SUPER-SECRET"
@@ -27,6 +27,8 @@ def index():
             return redirect(url_for('admin_page'))
         else:
             cart_products, counter = db.get_cart_products(connection, session.get('username'))
+            print(counter)
+            print(cart_products)
             total_price = 0
             products = db.get_all_products(connection)
             for product in cart_products:
@@ -39,8 +41,8 @@ def index():
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
-        username= request.form['username']
-        password= request.form['password']
+        username= escape(request.form['username'])
+        password= escape(request.form['password'])
         user = db.get_user(connection,username)
         if user:
             if utils.is_password_match(password,user[2]):
@@ -151,6 +153,7 @@ def add_product():
     product_id = request.args.get('product_id')
     username = session.get('username', "")
     print(product_id, "product id ----------  ", username)
+    db.add_to_cart(connection=connection,username=username,productID=product_id)
     return redirect(url_for('index'))
 
 @app.route('/update-profile', methods=['GET', 'POST'])

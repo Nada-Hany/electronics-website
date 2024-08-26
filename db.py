@@ -97,8 +97,11 @@ def get_user(connection, username):
     return cursor.fetchone()
 
 def add_to_cart(connection, username, productID):
-    pass
-
+    user = get_user(connection=connection,username=username)
+    cursor = connection.cursor()
+    query= '''INSERT INTO payment (user_id, products_id) VALUES (?, ?)'''
+    print(user[0])
+    cursor.execute(query,(user[0],productID))
 
 def get_cart_products(connection, username):
     user = get_user(connection, username)
@@ -111,6 +114,8 @@ def get_cart_products(connection, username):
     cursor.execute(query, (user[0],))
     print("in get cart product")
     tmp = cursor.fetchall()
+    print(tmp)
+    print("hi")
     products =[]
     for product in tmp:
         products.append(get_product_byID(connection,product))

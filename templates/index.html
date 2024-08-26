@@ -338,7 +338,7 @@
                           <input type="hidden" name="cart-btn" name="cart" />
                           <button class="add-to-cart-btn">
                             <a
-                              href="{{ url_for('add_product', product_id=product.id ) }}"
+                              href="{{ url_for('add_product', product_id=product[0] ) }}"
                               class="fa fa-shopping-cart"
                               >add to cart</a
                             >
