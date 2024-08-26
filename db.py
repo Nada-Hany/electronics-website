@@ -1,4 +1,3 @@
-
 import utils
 
 def connect_to_database(name='database.db'):
@@ -7,7 +6,9 @@ def connect_to_database(name='database.db'):
     
 
 
+
 def init_db(connection):
+    
     cursor = connection.cursor()
 
     cursor.execute('''
@@ -21,17 +22,19 @@ def init_db(connection):
 		);
 	''')
 
+    # cursor.execute('DROP TABLE IF EXISTS products')
+
     cursor.execute('''
-		CREATE TABLE IF NOT EXISTS products (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL ,
-			description TEXT,
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            description TEXT,
             price INTEGER NOT NULL,
-            img TEXT,
-            Category TEXT Not Null,
-            type TEXT
-		);
-	''')
+            category TEXT NOT NULL,
+            img TEXT
+        );
+    ''')
+
 
     cursor.execute('''
 		CREATE TABLE IF NOT EXISTS payment (
@@ -53,11 +56,25 @@ def add_user(connection, username, password, email ="", contact ="", img =""):
     cursor.execute(query, (username, hashed_password, email, contact, img))
     connection.commit()
 
-def add_product(connection,product_data):
+def add_product(connection, name, description, price, category, img):
     cursor = connection.cursor()
-    query = '''INSERT INTO products (name, description, price,img,Category, type) VALUES (?, ?, ?,?,?,?)'''
-    cursor.execute(query, (product_data['name'], product_data['description'], product_data['price'],product_data['img'],product_data['Category'],product_data['type']))
+    query = '''INSERT INTO products (name, description, price, Category, img) 
+               VALUES (?, ?, ?, ?, ?)'''
+    cursor.execute(query, (name, description, price, category, img))
+    connection.commit()  # Corrected "Commit" to "commit"
+
+def update_product_photo(connection, filename, name):
+    cursor = connection.cursor()
+    query = '''UPDATE products SET img = ? WHERE name = ?'''
+    cursor.execute(query, (filename, name))
     connection.commit()
+
+def update_photo(connection, filename , username):
+    cursor = connection.cursor()  
+    query = '''UPDATE users SET img = ? WHERE username = ?'''
+    cursor.execute(query, (filename,username))  
+    connection.commit()  
+
 
 def delete_user(connection, username):
     cursor = connection.cursor()
@@ -71,17 +88,7 @@ def update_user(connection , user_data):
     cursor.execute(query,(user_data['email'] , user_data['contact'] , user_data['username']))
     connection.commit() 
 
-def update_user_photo(connection, filename , username):
-    cursor = connection.cursor()  
-    query = '''UPDATE users SET img = ? WHERE username = ?'''
-    cursor.execute(query, (filename,username))  
-    connection.commit()  
 
-def update_product_photo(connection, filename , name):
-    cursor = connection.cursor()  
-    query = '''UPDATE products SET img = ? WHERE name = ?'''
-    cursor.execute(query, (filename,name))  
-    connection.commit() 
 
 def get_user(connection, username):
     cursor = connection.cursor()
@@ -110,6 +117,30 @@ def get_cart_products(connection, username):
 
     return products, len(tmp)
 
+def get_cart_products(connection, username):
+    user = get_user(connection, username)
+    
+    if user is None:
+        return [], 0 
+    
+    cursor = connection.cursor()
+    query = '''
+        SELECT products_id
+        FROM payment 
+        WHERE user_id = ?;
+    '''
+    cursor.execute(query, (user[0],))
+    tmp = cursor.fetchall()
+    products = []
+    
+    for product_id in tmp:
+        product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
+        if product:
+            products.append(product)
+    
+    return products, len(tmp)
+
+
 def get_all_products(connection):
     cursor = connection.cursor()
     query = 'SELECT * FROM products'
@@ -134,6 +165,8 @@ def get_product(connection, name):
     query = '''SELECT * FROM products WHERE name = ?'''
     cursor.execute(query, (name,))
     return cursor.fetchone()
+
+
 
 def get_all_users(connection):
     cursor = connection.cursor()
