@@ -1,6 +1,8 @@
 import re
 import bcrypt
 # from wtforms.validators import DataRequired,Length,Email,Regexp
+import hmac
+import hashlib
 
 
 
@@ -69,3 +71,18 @@ def valid_phone(phone):
 
     return True
 
+def is_valid_card_number(card_number):
+    if not card_number.isdigit() or not (13 <= len(card_number) <= 19):
+        return False
+    return True
+def get_product_by_id(products_list, product_id):
+    for product in products_list:
+        if product['product_id'] == int(product_id):
+            return product
+    return None
+
+def create_mac(price):
+    secret_key = b'supersecretkey'
+    price_bytes = str(price).encode('utf-8')
+    mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
+    return mac
