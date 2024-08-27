@@ -26,6 +26,10 @@ db.init_db(connection)
 
 @app.route('/',methods=['POST','GET'])
 def index():
+    if request.method == 'POST':
+        search_query = escape(request.form['search_query'])
+        print("search query in index - --", search_query)
+        return redirect(url_for('search', search_query=search_query))
     if 'username' in session:
         if session.get('username') == 'admin':
             return redirect(url_for('admin_page'))
@@ -34,7 +38,7 @@ def index():
             print(counter)
             print(cart_products)
             total_price = 0
-            products = db.get_all_products(connection)
+            products = db.get_all_products(connection)  
             for product in cart_products:
                 total_price += product[3]
             return render_template('index.html', products=products,cart_products = cart_products, counter = counter, total_price=total_price)
@@ -45,6 +49,8 @@ def index():
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
+        username= escape(request.form['username'])
+        password= escape(request.form['password'])
         username= escape(request.form['username'])
         password= escape(request.form['password'])
         user = db.get_user(connection,username)
@@ -78,11 +84,11 @@ def logout():
 @limiter.limit("10 per minute")
 def signUp():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = escape(request.form.get('username'))
+        password = escape(request.form.get('password'))
         email = request.form.get('email')
-        phone = request.form.get('phone')
-
+        phone = escape(request.form.get('phone'))
+        print("email ---", email)
         # Validate input fields
         if not username or not password or not email or not phone:
             flash("All fields are required.", "danger")
@@ -96,9 +102,9 @@ def signUp():
             flash("Phone number should be 11 digits long and contain only digits.", "danger")
         else:
             user = db.get_user(connection, username)
-            email = db.get_user_byEmail(connection, email)
-            if user or email: 
-                flash("Username/email already exists.", "danger")
+            email_ = db.get_user_byEmail(connection, email)
+            if user or email_:
+                flash("Username already exists.", "danger")
             else:
                 hashed_password = utils.hash_password(password)
                 db.add_user(connection, username, hashed_password, email, phone)
@@ -109,12 +115,12 @@ def signUp():
     return render_template("signUp.html")
 
 
-
 @app.route('/product', methods=['GET', 'POST'])
 def product():
+
     if 'username' not in session:
         return redirect(url_for('login'))
-    
+ 
     if request.method == 'POST':
         form_type = request.form.get('form_name')
 
@@ -151,6 +157,7 @@ def product():
         product = db.get_product(connection, product_name)
 
     return render_template('add-product.html', product=product)
+
     
 
 @app.route('/add_product')
@@ -316,6 +323,21 @@ def confirm():
         return f"Purchase confirmed at price ${price}."
     else:
         return f"Purchase Failed, Please Try Again",400
+
+
+
+@app.route('/search', methods=[ 'GET'])
+def search():
+    if request.method == 'GET':
+        search = request.args.get('search_query')
+        print(search, "----------- search")
+        if search:
+            products = db.get_products_by_category(connection, search)
+            return render_template('search-results.html', products=products)
+        else:
+            return render_template('search-results.html', products=[])
+        
+    
 
 
 if __name__ == '__main__':

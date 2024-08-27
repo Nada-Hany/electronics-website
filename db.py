@@ -49,7 +49,7 @@ def init_db(connection):
 
     connection.commit()
 
-def add_user(connection, username, password, email ="", contact ="", img =""):
+def add_user(connection, username, password, email , contact, img =""):
     cursor = connection.cursor()
     hashed_password = utils.hash_password(password)
     query = '''INSERT INTO users (username, password, email, contact, img) VALUES (?, ?, ?, ?, ?)'''
@@ -103,6 +103,13 @@ def get_user_byEmail(connection, email):
     return cursor.fetchone()
 
 
+def get_user_byEmail(connection, email):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM users WHERE email = ?'''
+    cursor.execute(query, (email,))
+    return cursor.fetchone()
+
+
 def add_to_cart(connection, username, productID):
     user = get_user(connection=connection,username=username)
     cursor = connection.cursor()
@@ -121,7 +128,6 @@ def get_cart_products(connection, username):
         WHERE user_id = ?;
     '''
     cursor.execute(query, (user[0],))
-    print("in get cart product")
     tmp = cursor.fetchall()
     print(tmp)
     print("hi")
@@ -130,33 +136,6 @@ def get_cart_products(connection, username):
         products.append(get_product_byID(connection,product))
 
     return products, len(tmp)
-
-
-
-
-# def get_cart_products(connection, username):
-#     user = get_user(connection, username)
-    
-#     if user is None:
-#         return [], 0 
-    
-#     cursor = connection.cursor()
-#     query = '''
-#         SELECT products_id
-#         FROM payment 
-#         WHERE user_id = ?;
-#     '''
-#     cursor.execute(query, (user[0],))
-#     tmp = cursor.fetchall()
-#     products = []
-    
-#     for product_id in tmp:
-#         product = get_product_byID(connection, product_id[0])  # Fix indexing to get the product ID correctly
-#         if product:
-#             products.append(product)
-    
-#     return products, len(tmp)
-
 
 def get_all_products(connection):
     cursor = connection.cursor()
@@ -178,7 +157,6 @@ def get_product(connection, name):
     return cursor.fetchone()
 
 
-
 def get_all_users(connection):
     cursor = connection.cursor()
     query = 'SELECT * FROM users'
@@ -192,4 +170,9 @@ def seed_admin_user(connection):
     admin_user = get_user(connection, admin_username)
     if not admin_user:
         add_user(connection, admin_username, admin_password)
-        print("Admin user seeded successfully.")
+
+def get_products_by_category(connection, category):
+    cursor = connection.cursor()
+    query = '''SELECT * FROM products WHERE category = ?'''
+    cursor.execute(query, (category,))
+    return cursor.fetchall()
