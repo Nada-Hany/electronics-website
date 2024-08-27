@@ -6,7 +6,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import validators
 from werkzeug.utils import secure_filename
-
+from markupsafe import escape
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.secret_key = "SUPER-SECRET"
@@ -22,13 +22,17 @@ db.init_db(connection)
 
 @app.route('/',methods=['POST','GET'])
 def index():
+    if request.method == 'POST':
+        search_query = escape(request.form['search_query'])
+        print("search query in index - --", search_query)
+        return redirect(url_for('search', search_query=search_query))
     if 'username' in session:
         if session.get('username') == 'admin':
             return redirect(url_for('admin_page'))
         else:
             cart_products, counter = db.get_cart_products(connection, session.get('username'))
             total_price = 0
-            products = db.get_all_products(connection)
+            products = db.get_all_products(connection)  
             for product in cart_products:
                 total_price += product[3]
             return render_template('index.html', products=products,cart_products = cart_products, counter = counter, total_price=total_price)
@@ -39,8 +43,8 @@ def index():
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
-        username= request.form['username']
-        password= request.form['password']
+        username= escape(request.form['username'])
+        password= escape(request.form['password'])
         user = db.get_user(connection,username)
         if user:
             if utils.is_password_match(password,user[2]):
@@ -70,10 +74,10 @@ def logout():
 @limiter.limit("10 per minute")
 def signUp():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = escape(request.form.get('username'))
+        password = escape(request.form.get('password'))
         email = request.form.get('email')
-        phone = request.form.get('phone')
+        phone = escape(request.form.get('phone'))
         print("email ---", email)
         # Validate input fields
         if not username or not password or not email or not phone:
@@ -99,7 +103,6 @@ def signUp():
 
     # Render the signup page with any flash messages
     return render_template("signUp.html")
-
 
 
 @app.route('/product', methods=['GET', 'POST'])
@@ -145,7 +148,6 @@ def product():
 
     return render_template('add-product.html', product=product)
 
-    
 
 @app.route('/add_product')
 def add_product():
@@ -254,13 +256,14 @@ def admin_page():
 @app.route('/search', methods=[ 'GET'])
 def search():
     if request.method == 'GET':
-        categ = request.args.get('category')
-        if categ:
-            products = db.get_products_by_category(connection, categ)
+        search = request.args.get('search_query')
+        print(search, "----------- search")
+        if search:
+            products = db.get_products_by_category(connection, search)
             return render_template('search-results.html', products=products)
         else:
             return render_template('search-results.html', products=[])
-    
+        
     
 
 
