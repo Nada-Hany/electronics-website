@@ -88,14 +88,13 @@ def signUp():
         password = escape(request.form.get('password'))
         email = request.form.get('email')
         phone = escape(request.form.get('phone'))
-        print("email ---", email)
         # Validate input fields
         if not username or not password or not email or not phone:
             flash("All fields are required.", "danger")
         elif not utils.valid_username(username):
-            flash("Invalid username. Must be at least 3 characters long and contain no special characters.", "danger")
-        elif utils.is_strong_password(password) != "Password is strong.":
-            flash("Weak password. Ensure your password is at least 8 characters long, includes uppercase and lowercase letters, a digit, and a special character.", "danger")
+            flash("Invalid username", "danger")
+        elif not utils.is_strong_password(password):
+            flash("Weak password.", "danger")
         elif not utils.valid_email(email):
             flash("Invalid email address.", "danger")
         elif not utils.valid_phone(phone):
@@ -103,12 +102,15 @@ def signUp():
         else:
             user = db.get_user(connection, username)
             email_ = db.get_user_byEmail(connection, email)
-            if user or email_:
+            phone_ =  db.get_user_byphone(connection, phone)
+            if user :
                 flash("Username already exists.", "danger")
+            elif email_ :
+                flash("email already exists.", "danger")
+            elif phone_ :
+                flash("phone already exists.", "danger")    
             else:
-                hashed_password = utils.hash_password(password)
-                db.add_user(connection, username, hashed_password, email, phone)
-                flash("User registered successfully!", "success")
+                db.add_user(connection, username, password, email, phone)
                 return redirect(url_for('login'))  # Redirect to login page or wherever appropriate
 
     # Render the signup page with any flash messages
@@ -139,15 +141,15 @@ def product():
                 filename = None
 
             product_data = {
-                "name": request.form.get('product_name'),
-                "description": request.form.get('description'),
-                "price": request.form.get('price'),
-                "category": request.form.get('category'),
+                "name": escape(request.form.get('product_name')),
+                "description": escape(request.form.get('description')),
+                "price":escape( request.form.get('price')),
+                "category":escape( request.form.get('category')),
                 "img": filename
             }
 
             db.add_product(connection, **product_data)
-            flash('Product added successfully.')
+            # flash('Product added successfully.')
 
             return redirect(url_for('product', name=product_data["name"]))
 
@@ -195,9 +197,9 @@ def update_profile():
         if form_type == 'update_user_data':
             user_data = {
                 "username": username,
-                "password": request.form.get('password'),
-                "email": request.form.get('email'),
-                "contact": request.form.get('contact'),
+                # "password": request.form.get('password'),
+                "email": escape(request.form.get('email')),
+                "contact": escape(request.form.get('contact')),
                 "img": request.form.get('img')
             }
             db.update_user(connection, user_data)
@@ -336,8 +338,17 @@ def search():
             return render_template('search-results.html', products=products)
         else:
             return render_template('search-results.html', products=[])
-        
-    
+
+
+def is_valid_url(server):
+    parsed_url = urlparse(server)
+    if parsed_url.scheme not in ['http', 'https']:  # lazm http aw https
+        return False
+    #only allow port 5000
+    whitelist = [5000]
+    return parsed_url.port in whitelist
+
+
 
 
 if __name__ == '__main__':

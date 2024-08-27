@@ -1,8 +1,6 @@
 import re
 import bcrypt
-import hmac
-import hashlib
-
+# from wtforms.validators import DataRequired,Length,Email,Regexp
 
 
 
@@ -27,95 +25,47 @@ def is_strong_password(password):
     require_digit = True
     require_special_char = True
 
-    if len(password) == 0:
-        return "Password cannot be empty."
-
     if len(password) < min_length:
-        return f"Password must be at least {min_length} characters long."
+        return False
 
     if require_uppercase and not any(char.isupper() for char in password):
-        return "Password must contain at least one uppercase letter."
+        return False
 
     if require_lowercase and not any(char.islower() for char in password):
-        return "Password must contain at least one lowercase letter."
+        return False
 
     if require_digit and not any(char.isdigit() for char in password):
-        return "Password must contain at least one digit."
+        return False
 
     if require_special_char and not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        return "Password must contain at least one special character."
+        return False
 
-    return "Password is strong."
+    return True
 
 def valid_email(email):
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if not re.match(email_regex, email):
-        return "Invalid email address."
-    return "Email is valid."
+        return False
+    return True
 
 def valid_username(username):
     min_len = 3
     if len(username) < min_len:
-        return f"Username must be at least {min_len} characters long."
+        return False
 
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", username):
-        return "Username should not contain special characters."
+        return False
 
-    return "Username is valid."
+    return True
 
 def valid_phone(phone):
     ph_len = 11
     ph_regex = r'^\d+$'
     if len(phone) != ph_len:
-        return f"Phone number must be {ph_len} digits long."
+        return False
 
     if not re.match(ph_regex, phone):
-        return "Phone number should contain only digits."
-
-    return "Phone number is valid."
-
-def required_data(name, passw, email, phone):
-    if not name:
-        return "Name is required."
-    if not passw:
-        return "Password is required."
-    if not email:
-        return "Email is required."
-    if not phone:
-        return "Phone number is required."
-    return "All required fields are filled."
-
-
-def requierd_Data(name,passw,email,phone):
-    if name or passw or email or phone == "":
-        return False
-    return True
-
-def validate_input(strinp):
-    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", strinp):
-        return True
-
-    return False
-
-def validate_phone(tel):
-    if len(tel) < 10 or not tel.isdigit():
         return False
 
     return True
 
-def is_valid_card_number(card_number):
-    if not card_number.isdigit() or not (13 <= len(card_number) <= 19):
-        return False
-    return True
-
-def get_product_byID(connection, id):
-    cursor = connection.cursor()
-    query = '''SELECT * FROM products WHERE id = ?'''
-    cursor.execute(query, (id,))
-    return cursor.fetchone()
-
-def create_mac(price):
-    secret_key = b'supersecretkey'
-    price_bytes = str(price).encode('utf-8')
-    mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
-    return mac

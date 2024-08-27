@@ -103,10 +103,10 @@ def get_user_byEmail(connection, email):
     return cursor.fetchone()
 
 
-def get_user_byEmail(connection, email):
+def get_user_byphone(connection, phone):
     cursor = connection.cursor()
-    query = '''SELECT * FROM users WHERE email = ?'''
-    cursor.execute(query, (email,))
+    query = '''SELECT * FROM users WHERE contact = ?'''
+    cursor.execute(query, (phone,))
     return cursor.fetchone()
 
 
@@ -136,6 +136,8 @@ def get_cart_products(connection, username):
         products.append(get_product_byID(connection,product))
 
     return products, len(tmp)
+
+
 
 def get_all_products(connection):
     cursor = connection.cursor()
