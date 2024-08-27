@@ -107,7 +107,6 @@ def is_valid_card_number(card_number):
         return False
     return True
 
-
 def get_product_byID(connection, id):
     cursor = connection.cursor()
     query = '''SELECT * FROM products WHERE id = ?'''
