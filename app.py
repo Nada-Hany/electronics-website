@@ -9,19 +9,15 @@ from werkzeug.utils import secure_filename
 from markupsafe import escape
 from urllib.parse import urlparse
 
-
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.secret_key = "SUPER-SECRET"
+
 limiter = Limiter(app=app, key_func=get_remote_address,
 default_limits=["50 per minute"], storage_uri="memory://")
-
-
 UPLOAD_FOLDER = 'static/uploads'
 
 connection = db.connect_to_database()
-
 db.init_db(connection)
 
 @app.route('/',methods=['POST','GET'])
@@ -34,13 +30,7 @@ def index():
         if session.get('username') == 'admin':
             return redirect(url_for('admin_page'))
         else:
-            cart_products, counter = db.get_cart_products(connection, session.get('username'))
-            print(counter)
-            print(cart_products)
-            total_price = 0
-            products = db.get_all_products(connection)  
-            for product in cart_products:
-                total_price += product[3]
+            products, cart_products, counter, total_price = utils.index_page_data(connection, session)
             return render_template('index.html', products=products,cart_products = cart_products, counter = counter, total_price=total_price)
     return redirect(url_for('login'))
 
@@ -160,7 +150,6 @@ def product():
 
     return render_template('add-product.html', product=product)
 
-    
 
 @app.route('/add_product')
 def add_product():
@@ -312,7 +301,6 @@ def checkout ():
     return render_template('checkout.html', products=whole_products, price=real_price, counter = counter, username = session.get('username'))
 
 
-
 @app.route('/confirm',methods=['POST', 'GET'])
 def confirm():
     
@@ -327,7 +315,6 @@ def confirm():
         return f"Purchase Failed, Please Try Again",400
 
 
-
 @app.route('/search', methods=[ 'GET'])
 def search():
     if request.method == 'GET':
@@ -339,17 +326,13 @@ def search():
         else:
             return render_template('search-results.html', products=[])
 
-
-def is_valid_url(server):
-    parsed_url = urlparse(server)
-    if parsed_url.scheme not in ['http', 'https']:  # lazm http aw https
-        return False
-    #only allow port 5000
-    whitelist = [5000]
-    return parsed_url.port in whitelist
-
-
-
+@app.route('/index', methods=[ 'GET'])
+def delete_cart_product():
+    product_id = request.args.get('product_id')
+    print(product,"  ---id")
+    db.delete_cart_product(connection, product_id, session.get('username'))
+    products, cart_products, counter, total_price = utils.index_page_data(connection, session)
+    return render_template('index.html', products=products,cart_products = cart_products, counter = counter, total_price=total_price)
 
 if __name__ == '__main__':
     db.init_db(connection)

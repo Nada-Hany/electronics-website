@@ -75,7 +75,6 @@ def update_photo(connection, filename , username):
     cursor.execute(query, (filename,username))  
     connection.commit()  
 
-
 def delete_user(connection, username):
     cursor = connection.cursor()
     query = ''' DELETE FROM users WHERE username = ? '''
@@ -101,7 +100,6 @@ def get_user_byEmail(connection, email):
     query = '''SELECT * FROM users WHERE email = ?'''
     cursor.execute(query, (email,))
     return cursor.fetchone()
-
 
 def get_user_byphone(connection, phone):
     cursor = connection.cursor()
@@ -137,6 +135,12 @@ def get_cart_products(connection, username):
 
     return products, len(tmp)
 
+def delete_cart_product(connection, product_id, username):
+    user_id = get_user(connection, username)[0]
+    query = 'DELETE FROM payment WHERE user_id = ? and products_id = ?'
+    cursor = connection.cursor()
+    cursor.execute(query, (user_id,product_id))
+    connection.commit()
 
 
 def get_all_products(connection):

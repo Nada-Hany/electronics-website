@@ -3,7 +3,7 @@ import bcrypt
 # from wtforms.validators import DataRequired,Length,Email,Regexp
 import hmac
 import hashlib
-
+import db
 
 
 def hash_password(password):
@@ -75,6 +75,7 @@ def is_valid_card_number(card_number):
     if not card_number.isdigit() or not (13 <= len(card_number) <= 19):
         return False
     return True
+
 def get_product_by_id(products_list, product_id):
     for product in products_list:
         if product['product_id'] == int(product_id):
@@ -86,3 +87,12 @@ def create_mac(price):
     price_bytes = str(price).encode('utf-8')
     mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
     return mac
+
+
+def index_page_data(connection, session):
+    cart_products, counter = db.get_cart_products(connection, session.get('username'))
+    total_price = 0     
+    products = db.get_all_products(connection)  
+    for product in cart_products:
+        total_price += product[3]
+    return products, cart_products, counter, total_price
