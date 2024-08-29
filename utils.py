@@ -94,5 +94,6 @@ def index_page_data(connection, session):
     total_price = 0     
     products = db.get_all_products(connection)  
     for product in cart_products:
-        total_price += product[3]
+        total_price += product[3] * product[6]
     return products, cart_products, counter, total_price
+

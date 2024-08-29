@@ -90,6 +90,7 @@
                   <input
                     type="text"
                     name="search_query"
+                    value=""
                     class="input"
                     placeholder="Search here"
                   />
@@ -139,7 +140,7 @@
                             <a href="#">{{product[1]}}</a>
                           </h3>
                           <h4 class="product-price">
-                            <span class="qty">1x</span>${{product[3]}}
+                            <span class="qty">{{product[6]}}x</span>${{product[3]}}
                           </h4>
                         </div>
                         <button class="delete">
@@ -303,10 +304,6 @@
                     <div class="product">
                       <div class="product-img">
                         <img src="{{ url_for('static', filename='uploads/' ~ product[5]) }}" alt="Product Image" style="max-width: 200px;" />
-
-                        <div class="product-label">
-                          <span class="new">{{product[6]}}</span>
-                        </div>
                       </div>
                       <div class="product-body">
                         <p class="product-category">{{product[4]}}</p>
@@ -337,8 +334,7 @@
                             <a
                               href="{{ url_for('add_product', product_id=product[0] ) }}"
                               class="fa fa-shopping-cart"
-                              >add to cart</a
-                            >
+                              >add to cart</a>
                           </button>
                         </form>
                       </div>

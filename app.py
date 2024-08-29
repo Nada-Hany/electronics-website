@@ -1,10 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import db
-import os
-import utils
+import db, os, utils, validators
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-import validators
 from werkzeug.utils import secure_filename
 from markupsafe import escape
 from urllib.parse import urlparse
@@ -20,11 +17,11 @@ UPLOAD_FOLDER = 'static/uploads'
 connection = db.connect_to_database()
 db.init_db(connection)
 
+
 @app.route('/',methods=['POST','GET'])
 def index():
     if request.method == 'POST':
         search_query = escape(request.form['search_query'])
-        print("search query in index - --", search_query)
         return redirect(url_for('search', search_query=search_query))
     if 'username' in session:
         if session.get('username') == 'admin':
@@ -153,12 +150,11 @@ def product():
 
 @app.route('/add_product')
 def add_product():
-    print("inn add product to cart method ")
     product_id = request.args.get('product_id')
     username = session.get('username', "")
-    print(product_id, "product id ----------  ", username)
     db.add_to_cart(connection=connection,username=username,productID=product_id)
     return redirect(url_for('index'))
+
 
 @app.route('/update-profile', methods=['GET', 'POST'])
 def update_profile():
@@ -259,12 +255,12 @@ def admin_page():
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout ():
 
-    products_id, counter = db.get_cart_products(connection, session.get('username'))
+    products, counter = db.get_cart_products(connection, session.get('username'))
     whole_products = []
     real_price = 0
-    for id in products_id:
-        whole_products.append(id)
-        real_price += id[3]
+    for p in products:
+        whole_products.append(p)
+        real_price += p[3] * p[6]
     session['Correct_MAC'] = utils.create_mac(real_price)
 
     if request.method == 'POST':
@@ -319,21 +315,23 @@ def confirm():
 def search():
     if request.method == 'GET':
         search = request.args.get('search_query')
-        print(search, "----------- search")
         if search:
             products = db.get_products_by_category(connection, search)
             return render_template('search-results.html', products=products)
         else:
             return render_template('search-results.html', products=[])
 
+
 @app.route('/index', methods=[ 'GET'])
 def delete_cart_product():
     product_id = request.args.get('product_id')
-    print(product,"  ---id")
     db.delete_cart_product(connection, product_id, session.get('username'))
     products, cart_products, counter, total_price = utils.index_page_data(connection, session)
     return render_template('index.html', products=products,cart_products = cart_products, counter = counter, total_price=total_price)
 
+
 if __name__ == '__main__':
     db.init_db(connection)
     app.run(debug=True)
+
+

@@ -22,7 +22,6 @@ def init_db(connection):
 		);
 	''')
 
-    # cursor.execute('DROP TABLE IF EXISTS products')
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS products (
@@ -40,10 +39,10 @@ def init_db(connection):
 		CREATE TABLE IF NOT EXISTS payment (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGERR,
-            products_id INTEGERR,
+            products_id INTEGERR, `amount` INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (products_id) REFERENCES products(id)
-		);
+		)
 	''')
     
 
@@ -87,8 +86,6 @@ def update_user(connection , user_data):
     cursor.execute(query,(user_data['email'] , user_data['contact'] , user_data['username']))
     connection.commit() 
 
-
-
 def get_user(connection, username):
     cursor = connection.cursor()
     query = '''SELECT * FROM users WHERE username = ?'''
@@ -107,13 +104,19 @@ def get_user_byphone(connection, phone):
     cursor.execute(query, (phone,))
     return cursor.fetchone()
 
-
 def add_to_cart(connection, username, productID):
     user = get_user(connection=connection,username=username)
     cursor = connection.cursor()
-    query= '''INSERT INTO payment (user_id, products_id) VALUES (?, ?)'''
-    print(user[0])
-    cursor.execute(query,(user[0],productID))
+    querSearch = '''SELECT * FROM payment WHERE user_id = ? and products_id = ?'''
+    cursor.execute(querSearch,(user[0],productID))
+    entry = cursor.fetchone()
+    if not entry:
+        query= '''INSERT INTO payment (user_id, products_id, amount) VALUES (?, ?, ?)'''
+        cursor.execute(query,(user[0],productID, 1))
+    else:
+        amount = entry[3] + 1
+        query = '''UPDATE payment SET amount = ? WHERE user_id = ? and products_id = ?'''
+        cursor.execute(query,(amount, user[0], productID))
     connection.commit()
 
     
@@ -121,26 +124,42 @@ def get_cart_products(connection, username):
     user = get_user(connection, username)
     cursor = connection.cursor()
     query ='''
-        SELECT products_id
+        SELECT *
         FROM payment 
         WHERE user_id = ?;
     '''
     cursor.execute(query, (user[0],))
+    counter = 0 
     tmp = cursor.fetchall()
-    print(tmp)
-    print("hi")
-    products =[]
+    products = []
     for product in tmp:
-        products.append(get_product_byID(connection,product))
+        p = get_product_byID(connection,product[2])
+        counter += product[3]
+        products.append((*list(p), product[3]))
 
-    return products, len(tmp)
+    return products, counter
+
 
 def delete_cart_product(connection, product_id, username):
     user_id = get_user(connection, username)[0]
-    query = 'DELETE FROM payment WHERE user_id = ? and products_id = ?'
     cursor = connection.cursor()
+    query = 'SELECT * FROM payment WHERE user_id = ? and products_id = ?'
     cursor.execute(query, (user_id,product_id))
+    entry = cursor.fetchone()
+    print("entry ---- ", entry)
+    print(entry[3])
+    if entry:
+        if entry[3] == 1:
+            query = 'DELETE FROM payment WHERE user_id = ? and products_id = ?'
+            cursor.execute(query, (user_id,product_id))
+        else:
+            amount = entry[3] - 1
+            query = '''UPDATE payment SET amount = ? WHERE user_id = ? and products_id = ?'''
+            cursor.execute(query,(amount,user_id, product_id))
+
     connection.commit()
+
+    
 
 
 def get_all_products(connection):
@@ -153,7 +172,7 @@ def get_all_products(connection):
 def get_product_byID(connection, id):
     cursor = connection.cursor()
     query = '''SELECT * FROM products WHERE id = ?'''
-    cursor.execute(query, id)
+    cursor.execute(query, (id,))
     return cursor.fetchone()
 
 def get_product(connection, name):
@@ -182,3 +201,6 @@ def get_products_by_category(connection, category):
     query = '''SELECT * FROM products WHERE category = ?'''
     cursor.execute(query, (category,))
     return cursor.fetchall()
+
+
+
