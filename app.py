@@ -302,13 +302,14 @@ def confirm():
     
     price = request.args.get('price')
     # price = request.form['price']
-
+    if(request.method == "POST"):
+        return redirect('index')
     user_Correct_MAC = utils.create_mac(price)
 
     if 'Correct_MAC' in session and session['Correct_MAC'] == user_Correct_MAC:
-        return f"Purchase confirmed at price ${price}."
+        return render_template('confirm.html', price=price, valid=True)
     else:
-        return f"Purchase Failed, Please Try Again",400
+        return render_template('confirm.html', valid=False)
 
 
 @app.route('/search', methods=[ 'GET'])

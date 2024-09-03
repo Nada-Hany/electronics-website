@@ -86,8 +86,8 @@ def create_mac(price):
     secret_key = b'supersecretkey'
     price_bytes = str(price).encode('utf-8')
     mac = hmac.new(secret_key, price_bytes, hashlib.sha256).hexdigest()
+    print("initiated mac -- ", mac)
     return mac
-
 
 def index_page_data(connection, session):
     cart_products, counter = db.get_cart_products(connection, session.get('username'))

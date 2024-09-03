@@ -146,8 +146,6 @@ def delete_cart_product(connection, product_id, username):
     query = 'SELECT * FROM payment WHERE user_id = ? and products_id = ?'
     cursor.execute(query, (user_id,product_id))
     entry = cursor.fetchone()
-    print("entry ---- ", entry)
-    print(entry[3])
     if entry:
         if entry[3] == 1:
             query = 'DELETE FROM payment WHERE user_id = ? and products_id = ?'

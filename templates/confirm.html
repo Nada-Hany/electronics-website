@@ -4,25 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>confirm purchase</title>
-    <link
-      rel="stylesheet"
-      href="C:\programming\python\electronics-website\static\css\confirm.css"
-    />
+    <link rel="stylesheet" href="../static/css/confirm.css" />
   </head>
   <body>
-    <h1>Confirm</h1>
-    <p>Product ID: {{ product_id }}</p>
-    <hr />
-    <p>Product Price: ${{ price }}</p>
+    <div class="container">
+      {% if valid %}
+      <h1>Order Confirmed</h1>
+      <p>Purchase confirmed at price ${{price}}.</p>
+      {% else %}
 
-    <!-- <form action="{{ url_for('confirm') }}" method="POST">
-      <input type="hidden" name="price" value="{{ price }}" />
-      <input type="submit" class="btn btn-primary" value="Confirm Purchase" />
-    </form> -->
-
-    <form action="#" method="POST">
-      <input type="hidden" name="price" value="{{ price }}" />
-      <input type="submit" class="btn btn-primary" value="Confirm Purchase" />
-    </form>
+      <h1>Invalid Order</h1>
+      {% endif %}
+      <div class="continue-button">
+        <form method="post">
+          <button type="submit">Continue shopping</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,21 +1,47 @@
 
-
-h1 {
-    color: #333;
-    margin-bottom: 20px;
+:root {
+    --primary-color: #490606;
+    --secondary-color: #D10024;
+    --font: #555555;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--font);
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center;  */
+    /* display: grid; */
+    align-content: center;
+}
+.title{
 
-input[type="submit"] {
-    background-color: #882123;
-    color: white;
-    padding: 10px;
+    font-size: large;
+    font-weight: 100;
+}
+button {
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 10%;
+    outline: none;
+    padding: 8px;
+    width: 252px;
+    color: #fff;
     font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+    background: var(--primary-color);
 }
 
-input[type="submit"]:hover {
-    background-color: #882123;
+button:hover {
+    background: var(--secondary-color);
 }
