@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session,  flash
 import db, os, utils, validators
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -51,11 +51,11 @@ def login():
                 else:
                     return redirect(url_for('admin_page'))
             else:
-                flash("wrong password","danger")
+                # flash("wrong password","danger")
                 return render_template('login.html')
         else:
             print("invalid username")
-            flash("invalid username","danger")
+            # flash("invalid username","danger")
             return render_template('login.html')
     return render_template('login.html')
 
@@ -100,7 +100,7 @@ def signUp():
                 db.add_user(connection, username, password, email, phone)
                 return redirect(url_for('login'))  # Redirect to login page or wherever appropriate
 
-    # Render the signup page with any flash messages
+    # Render the signup page with any # flash messages
     return render_template("signUp.html")
 
 
@@ -136,7 +136,7 @@ def product():
             }
 
             db.add_product(connection, **product_data)
-            # flash('Product added successfully.')
+            # # flash('Product added successfully.')
 
             return redirect(url_for('product', name=product_data["name"]))
 
@@ -188,7 +188,7 @@ def update_profile():
                 "img": request.form.get('img')
             }
             db.update_user(connection, user_data)
-            flash('Profile updated successfully.')
+            # flash('Profile updated successfully.')
 
         elif form_type == 'upload_photo':
             photo = request.files.get('profile_picture')
@@ -201,7 +201,7 @@ def update_profile():
                     filename = secure_filename(photo.filename)
                     db.update_photo(connection, filename, username)
                     photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    flash('Photo uploaded successfully.')
+                    # flash('Photo uploaded successfully.')
 
         data = db.get_user(connection, username)
         if not data:
@@ -273,22 +273,22 @@ def checkout ():
         print(f"Received order notes: {order_notes}")
         user = db.get_user(connection, username)
         if not user:
-            flash("Username Not Exists")
+            # flash("Username Not Exists")
             return redirect(url_for('signUP.html'))
         elif not utils.is_valid_card_number(card_number) :
-            flash("Invalid card number", "danger")
+            # flash("Invalid card number", "danger")
             return render_template('checkout.html')
 
         elif utils.validate_input(cardholder):
-            flash("Special Characters Are Not Allowed in Cardholder","warning")
+            # flash("Special Characters Are Not Allowed in Cardholder","warning")
             return render_template('checkout.html')
 
         elif utils.validate_input(address):
-            flash("Special Characters Are Not Allowed in Address","warning")
+            # flash("Special Characters Are Not Allowed in Address","warning")
             return render_template('checkout.html')
 
         elif not utils.validate_phone(tel):
-            flash("Invalid Phone Number")
+            # flash("Invalid Phone Number")
             return render_template('checkout.html')
 
         else:
@@ -303,7 +303,7 @@ def confirm():
     price = request.args.get('price')
     # price = request.form['price']
     if(request.method == "POST"):
-        return redirect('index')
+        return redirect('index.html')
     user_Correct_MAC = utils.create_mac(price)
 
     if 'Correct_MAC' in session and session['Correct_MAC'] == user_Correct_MAC:

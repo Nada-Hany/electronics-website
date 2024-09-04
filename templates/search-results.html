@@ -66,7 +66,7 @@
           <div class="row">
             <div class="col-md-3">
               <div class="header-logo">
-                <a href="#" class="logo">
+                <a href="{{ url_for('index' ) }}" class="logo">
                   <img src="../static/assets/img/logo.png" alt="" />
                 </a>
               </div>
@@ -74,9 +74,17 @@
             <div class="col-md-6">
               <div class="header-search">
                 <form action="{{ url_for('search') }}" method="GET">
+                  <select class="input-select">
+                    <option value="0">All Categories</option>
+                    <option value="1">laptop</option>
+                    <option value="1">headset</option>
+                    <option value="1">camera</option>
+                  </select>
                   <input
+                    type="text"
                     class="input"
-                    name="category"
+                    name="search_query"
+                    value=""
                     placeholder="Search here"
                   />
                   <button type="submit" class="search-btn">Search</button>
