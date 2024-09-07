@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-color: #490606;
+    --secondary-color: #D10024;
+    --font: #555555;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--primary-color);
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    max-width: 900px;
+    height: 550px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login {
+    width: 520px;
+}
+
+.form {
+    width: 250px;
+    margin: 60px auto;
+}
+.pic{
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+h1 {
+    color: var(--font);
+    margin: 15px;
+    text-align: center;
+    font-weight: bolder;
+    text-transform: uppercase;
+}
+
+p {
+    text-align: center;
+    margin: 10px;
+    
+}
+
+hr {
+    border-top: 2px solid var(--font);
+}
+
+.pic img {
+    width: 200px;
+    height: 200px;
+    border-radius: 40%;
+}
+
+form label {
+    color: var(--font);
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px;
+}
+
+.change-img{
+}
+
+input {
+    width: 100%;
+    margin: 2px;
+    border: none;
+    outline: none;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+button {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 252px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+    background: var(--primary-color);
+}
+
+.insertion{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+button:hover {
+    background: var(--secondary-color);
+}
+
+p {
+    margin: 20px;
+}
+
+a {
+    color: var(--font);
+    text-decoration: none;
+}
+
+#exit-btn{
+    width: 100px;
+    margin: 0px 0px 30px 30px;
+}

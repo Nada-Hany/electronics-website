@@ -38,8 +38,6 @@ def login():
     if request.method == 'POST':
         username= escape(request.form['username'])
         password= escape(request.form['password'])
-        username= escape(request.form['username'])
-        password= escape(request.form['password'])
         user = db.get_user(connection,username)
 
         if user:
@@ -54,7 +52,6 @@ def login():
                 # flash("wrong password","danger")
                 return render_template('login.html')
         else:
-            print("invalid username")
             # flash("invalid username","danger")
             return render_template('login.html')
     return render_template('login.html')
@@ -162,6 +159,7 @@ def update_profile():
     action = request.args.get('action')
 
     if 'username' not in session:
+        print("not in session ----------")
         return redirect(url_for('login'))
 
     if action != '2':
@@ -171,7 +169,7 @@ def update_profile():
         if action != '2' and username != session.get('username'):
             return f"unauthorized"
         data = db.get_user(connection, username)
-        return render_template('update-profile.html', data=data)
+        return render_template('update-profile2.html', data=data, action=action)
 
     elif request.method == 'POST':
         form_type = request.form.get('form_name')
@@ -182,7 +180,6 @@ def update_profile():
         if form_type == 'update_user_data':
             user_data = {
                 "username": username,
-                # "password": request.form.get('password'),
                 "email": escape(request.form.get('email')),
                 "contact": escape(request.form.get('contact')),
                 "img": request.form.get('img')
@@ -207,7 +204,7 @@ def update_profile():
         if not data:
             return "User not found", 404
 
-        return render_template('update-profile.html', data=data)
+        return render_template('update-profile2.html', data=data, action=action)
 
 
 @app.route('/upload', methods=['POST'])
@@ -232,7 +229,7 @@ def upload():
 def admin_list():
     if request.method == 'GET':
         users = db.get_all_users(connection)
-        return render_template('userList.html', users=users)
+        return render_template('admin_list.html', users=users)
     elif request.method == 'POST':
         action = request.form.get('action')
         temp_username = request.form.get('user_username')
@@ -317,7 +314,7 @@ def search():
     if request.method == 'GET':
         search = request.args.get('search_query')
         if search:
-            products = db.get_products_by_category(connection, search)
+            products = db.get_products_by_category(connection, search.lower())
             return render_template('search-results.html', products=products)
         else:
             return render_template('search-results.html', products=[])

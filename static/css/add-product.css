@@ -98,7 +98,10 @@ button{
 button:hover{
     background:var(--btn);
 }
-
+#exit-btn{
+    margin: 0;
+    width: 150px;
+}
 .new-product-info {
 
     display: flex;

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Form | By Code Info</title>
+    <link rel="stylesheet" href="../static/css/update-profile2.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="login">
+        {% include 'includes/alert.html' %}
+        <form
+          class="form"
+          action="{{ url_for('update_profile') }}"
+          method="POST"
+        >
+          <h1>Update Your Profile</h1>
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter your username"
+            value="{{ data[1]}}"
+            disabled
+          />
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value="{{ data[3] }}"
+          />
+          <label>Contact</label>
+          <input
+            type="text"
+            name="contact"
+            placeholder="Enter your phone number"
+            value="{{ data[4] }}"
+          />
+          <input type="hidden" name="form_name" value="update_user_data" />
+          <div class="submit">
+            <button type="submit">Update Data</button>
+          </div>
+        </form>
+        <span>
+          <!-- action is two go back to admin page -->
+          {% if action == 2 %}
+          <form action="{{ url_for('admin_list' ) }}">
+            <button type="submit" id="exit-btn">exit</button>
+          </form>
+          {% else %}
+          <form action="{{ url_for('index' ) }}">
+            <button type="submit" id="exit-btn">exit</button>
+          </form>
+          {% endif %}
+        </span>
+      </div>
+      <div class="pic">
+        {% if data[5] %}
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ data[5]) }}"
+          alt="Profile Picture"
+        />
+        {% else %}
+        <p>No profile picture uploaded.</p>
+        {% endif %}
+        <form
+          class="change-img form"
+          action="{{ url_for('update_profile') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="insertion">
+            <input
+              class="hidden"
+              type="hidden"
+              name="form_name"
+              value="upload_photo"
+            />
+            <label>
+              <input
+                class="file"
+                type="file"
+                id="profile_picture"
+                name="profile_picture"
+              />
+            </label>
+            <div class="submit">
+              <button type="submit" class="photo-button">Save Changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
